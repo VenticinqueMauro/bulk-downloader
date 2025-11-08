@@ -159,14 +159,14 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="bg-gray-900 text-white min-h-screen flex flex-col font-sans">
-      <Header 
+    <div className="bg-gray-900 text-white h-screen flex flex-col font-sans overflow-hidden">
+      <Header
         isProUser={userData.isProUser}
         onTogglePro={handleTogglePro}
         scanCredits={userData.scanCredits}
       />
-      <main className="container mx-auto px-4 flex-grow flex flex-col">
-        <UrlInputForm 
+      <main className="container mx-auto px-4 flex-grow flex flex-col overflow-hidden">
+        <UrlInputForm
           onStandardScan={handleStandardScan}
           onAiScan={handleAiScan}
           onBatchScan={handleBatchScan}
@@ -176,7 +176,7 @@ const App: React.FC = () => {
           onProFeatureClick={() => setIsProModalOpen(true)}
         />
         {error && (
-            <div className="my-4 p-4 bg-rose-900/50 border border-rose-700 text-rose-300 rounded-lg">
+            <div className="my-4 p-4 bg-rose-900/50 border border-rose-700 text-rose-300 rounded-lg flex-shrink-0">
                 <p className="text-center mb-2">{error}</p>
                 {error.includes('API key') && (
                   <div className="text-center">
@@ -191,13 +191,13 @@ const App: React.FC = () => {
             </div>
         )}
         {allFiles.length > 0 ? (
-          <div className="flex-grow flex flex-col min-h-0">
-            <FilterBar 
+          <div className="flex-grow flex flex-col min-h-0 overflow-hidden">
+            <FilterBar
                 currentFilter={currentFilter}
                 onFilterChange={setCurrentFilter}
                 fileCounts={fileCounts}
             />
-            <FileList 
+            <FileList
                 files={filteredFiles}
                 selectedFileUrls={selectedFileUrls}
                 onSelectionChange={setSelectedFileUrls}
