@@ -1,4 +1,4 @@
-// FIX: Add reference to chrome types to fix TS errors for chrome.downloads API.
+// FIX: Moved the chrome types reference to the top of the file to ensure it is processed correctly.
 /// <reference types="chrome" />
 import React, { useState } from 'react';
 import { FileItem } from '../types';
