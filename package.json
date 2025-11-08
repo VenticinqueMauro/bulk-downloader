@@ -1,8 +1,8 @@
 {
-  "name": "gemini-bulk-file-downloader",
+  "name": "fileharvest",
   "private": true,
   "version": "1.0.0",
-  "description": "A powerful Chrome extension to scan webpages and download files in bulk, powered by Gemini AI",
+  "description": "A powerful Chrome extension to scan webpages and download files in bulk, powered by AI",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -32,7 +32,7 @@
   "author": "",
   "keywords": [
     "chrome-extension",
-    "gemini",
+    "fileharvest",
     "bulk-download",
     "file-downloader",
     "ai"

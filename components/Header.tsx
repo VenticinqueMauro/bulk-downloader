@@ -15,7 +15,7 @@ export const Header: React.FC<HeaderProps> = ({ isProUser, onTogglePro, scanCred
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center gap-3">
             <LogoIcon className="h-8 w-8 text-sky-400" />
-            <h1 className="text-xl font-bold text-white">Gemini Bulk Downloader</h1>
+            <h1 className="text-xl font-bold text-white">FileHarvest</h1>
           </div>
           <div className="flex items-center gap-4">
             {isProUser ? (

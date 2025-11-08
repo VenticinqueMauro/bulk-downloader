@@ -1,14 +1,14 @@
-# Gemini Bulk File Downloader
+# FileHarvest
 
-Una poderosa extensión de Chrome para escanear páginas web y descargar archivos en masa, potenciada por Gemini AI.
+Una poderosa extensión de Chrome para escanear páginas web y descargar archivos en masa, potenciada por IA.
 
-![Gemini Bulk File Downloader](image.png)
+![FileHarvest](fileharvest.png)
 
 ## Características
 
 ### Escaneo Inteligente
 - **Escaneo Estándar**: Análisis rápido y gratuito mediante parsing del DOM
-- **Escaneo Profundo con IA**: Usa Gemini AI para detectar archivos en páginas complejas
+- **Escaneo Profundo con IA**: Usa IA para detectar archivos en páginas complejas
 - **Procesamiento por Lotes**: Escanea múltiples URLs simultáneamente (Función Pro)
 
 ### Interfaz Moderna
@@ -30,7 +30,7 @@ Una poderosa extensión de Chrome para escanear páginas web y descargar archivo
 
 ### Requisitos Previos
 - Node.js 18+ y npm
-- Cuenta de Google Cloud con acceso a Gemini API
+- Cuenta de Google Cloud con acceso a la API de IA (Gemini)
 - Cuenta de Vercel (para el proxy)
 
 ### 1. Clonar el Repositorio
@@ -97,7 +97,7 @@ Esto creará una carpeta `dist/` con todos los archivos de la extensión.
 
 ## Configuración de Usuario
 
-### Obtener API Key de Gemini
+### Obtener API Key de IA
 
 1. Ve a [Google AI Studio](https://aistudio.google.com/app/apikey)
 2. Crea un nuevo proyecto o selecciona uno existente
@@ -108,7 +108,7 @@ Esto creará una carpeta `dist/` con todos los archivos de la extensión.
 
 1. Haz clic derecho en el icono de la extensión
 2. Selecciona "Opciones" o "Options"
-3. Pega tu API key de Gemini
+3. Pega tu API key
 4. Haz clic en "Guardar"
 
 ## Uso
@@ -122,7 +122,7 @@ Esto creará una carpeta `dist/` con todos los archivos de la extensión.
 
 ### Escaneo Profundo con IA
 
-1. Asegúrate de haber configurado tu API key de Gemini
+1. Asegúrate de haber configurado tu API key
 2. Haz clic en "AI Deep Scan"
 3. La IA analizará la página en detalle
 4. Usuarios gratuitos tienen 5 escaneos incluidos
@@ -201,7 +201,7 @@ bulk-downloader/
        │
        ├─ DOM Parsing (Escaneo Estándar)
        │
-       └─ Gemini AI (Escaneo Profundo)
+       └─ AI (Escaneo Profundo)
 ```
 
 ## Seguridad
@@ -215,7 +215,7 @@ bulk-downloader/
 ## Limitaciones
 
 - El escaneo estándar solo detecta archivos enlazados en el HTML
-- El escaneo con IA requiere una API key válida de Gemini
+- El escaneo con IA requiere una API key válida
 - El proxy tiene un límite de 30 peticiones por minuto por IP
 - Usuarios gratuitos tienen 5 escaneos de IA incluidos
 
@@ -238,7 +238,7 @@ bulk-downloader/
 - **Frontend**: React 19.2.0 + TypeScript
 - **Build Tool**: Vite 6.2.0
 - **Estilos**: Tailwind CSS 3
-- **IA**: Google Gemini API
+- **IA**: Google Gemini
 - **Backend**: Vercel Serverless Functions
 - **Generación de Iconos**: Sharp
 

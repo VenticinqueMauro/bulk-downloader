@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
-  "name": "Gemini Bulk File Downloader",
-  "description": "A powerful freemium tool to scan any webpage and download all detected files in bulk. Features advanced filtering, multi-URL processing, and a sleek, modern interface powered by Gemini.",
+  "name": "FileHarvest",
+  "description": "A powerful freemium tool to scan any webpage and download all detected files in bulk. Features advanced filtering, multi-URL processing, and a sleek, modern interface powered by AI.",
   "version": "1.0",
   "icons": {
     "16": "icons/icon16.png",

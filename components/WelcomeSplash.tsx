@@ -7,7 +7,7 @@ export const WelcomeSplash: React.FC = () => {
         <div className="flex-grow flex items-center justify-center p-4">
             <div className="text-center bg-gray-800/50 border border-gray-700/50 rounded-2xl p-8 sm:p-12 max-w-2xl mx-auto">
                 <DownloadCloudIcon className="h-16 w-16 text-sky-400 mx-auto mb-6" />
-                <h2 className="text-3xl font-bold text-white mb-2">Welcome to Gemini Bulk Downloader</h2>
+                <h2 className="text-3xl font-bold text-white mb-2">Welcome to FileHarvest</h2>
                 <p className="text-lg text-gray-400 mb-8">
                     The smartest way to download files from any webpage.
                 </p>
@@ -18,7 +18,7 @@ export const WelcomeSplash: React.FC = () => {
                         </div>
                         <div>
                             <h3 className="font-semibold text-white">Scan Any Page</h3>
-                            <p className="text-gray-400 text-sm">Paste a URL above and let Gemini's AI find all downloadable files.</p>
+                            <p className="text-gray-400 text-sm">Paste a URL above and let AI find all downloadable files.</p>
                         </div>
                     </div>
                      <div className="bg-gray-900/50 p-4 rounded-lg flex items-start gap-4">

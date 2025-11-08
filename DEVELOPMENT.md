@@ -1,4 +1,4 @@
-# Gemini Bulk File Downloader - Development Guide
+# FileHarvest - Development Guide
 
 ## Quick Start
 
@@ -6,7 +6,7 @@
 
 - Node.js 18+ and npm
 - Google Chrome browser
-- Gemini API key ([Get one here](https://aistudio.google.com/apikey))
+- Google AI API key ([Get one here](https://aistudio.google.com/apikey))
 
 ### Installation
 
@@ -31,7 +31,7 @@
 4. **Configure API Key**
    - Click the extension icon in Chrome toolbar
    - Click "Open Settings" button
-   - Paste your Gemini API key
+   - Paste your AI API key
    - Click "Save API Key"
 
 ### Building for Production

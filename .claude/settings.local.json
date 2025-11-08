@@ -1,20 +1,12 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npm install:*)",
       "Bash(npm run build:*)",
-      "Bash(npm uninstall:*)",
-      "Bash(dir:*)",
-      "Bash(git commit:*)",
-      "Bash(git push:*)",
-      "Bash(git init:*)",
       "Bash(git add:*)",
-      "Bash(git config:*)",
-      "Bash(gh repo create:*)",
-      "Bash(git remote add:*)",
-      "Bash(git branch:*)",
-      "Bash(git remote set-url:*)",
-      "Bash(curl:*)"
+      "Bash(git commit:*)",
+      "Bash(git push)",
+      "Bash(copy:*)",
+      "Bash(npm run generate-icons:*)"
     ],
     "deny": [],
     "ask": []

@@ -65,7 +65,7 @@ const App: React.FC = () => {
     } catch (e: any) {
       console.error(e);
       if (e instanceof ApiKeyMissingError) {
-        setError('API key is not configured. Click here to open settings and add your Gemini API key.');
+        setError('API key is not configured. Click here to open settings and add your AI API key.');
       } else {
         setError(e.message || 'AI Scan failed. Please check the console for details.');
       }

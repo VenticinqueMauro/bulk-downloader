@@ -1,6 +1,6 @@
-# Gemini Bulk File Downloader
+# FileHarvest
 
-> A powerful Chrome extension to scan webpages and download files in bulk, powered by Gemini AI.
+> A powerful Chrome extension to scan webpages and download files in bulk, powered by AI.
 
 ## Features
 
@@ -31,9 +31,9 @@
 
 Follow the installation steps above.
 
-### 2. Get a Gemini API Key (For AI Features)
+### 2. Get an AI API Key (For AI Features)
 
-AI Deep Scan requires a free Gemini API key:
+AI Deep Scan requires a free API key:
 
 1. Visit [Google AI Studio](https://aistudio.google.com/apikey)
 2. Sign in with your Google account
@@ -103,15 +103,15 @@ The extension can detect and download:
 
 ### Do I need an API key?
 
-You need a Gemini API key only for the **AI Deep Scan** feature. Standard Scan works without an API key.
+You need an AI API key only for the **AI Deep Scan** feature. Standard Scan works without an API key.
 
 ### Is the API key free?
 
-Yes! Gemini offers a generous free tier. Check [pricing](https://ai.google.dev/pricing) for limits.
+Yes! Google AI offers a generous free tier. Check [pricing](https://ai.google.dev/pricing) for limits.
 
 ### Is my API key secure?
 
-Yes. Your API key is stored locally in your browser using Chrome's secure storage. It never leaves your device except to call the Gemini API.
+Yes. Your API key is stored locally in your browser using Chrome's secure storage. It never leaves your device except to call the AI API.
 
 ### Why can't it scan some websites?
 
@@ -129,7 +129,7 @@ Currently only Chrome is supported. Firefox and Edge support may come in future 
 
 - Your API key is stored **locally** in your browser
 - No data is sent to third parties except:
-  - Gemini API (for AI scanning)
+  - AI API (for AI scanning)
   - Target websites (to fetch content)
 - No tracking or analytics
 - No personal data collected
@@ -139,7 +139,7 @@ Currently only Chrome is supported. Firefox and Edge support may come in future 
 ### "API key is not configured" error
 
 1. Click "Open Settings" in the error message
-2. Enter your Gemini API key
+2. Enter your AI API key
 3. Click "Save API Key"
 4. Try scanning again
 
@@ -194,7 +194,7 @@ For issues, questions, or feature requests:
 ## Credits
 
 - Built with React + TypeScript + Vite
-- Powered by Google Gemini AI
+- Powered by Google AI
 - UI styled with Tailwind CSS
 
 ## License

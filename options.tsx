@@ -79,7 +79,7 @@ const OptionsPage: React.FC = () => {
       <div className="max-w-4xl mx-auto px-4 py-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-2 bg-gradient-to-r from-purple-400 to-pink-600 bg-clip-text text-transparent">
-            Gemini Bulk File Downloader
+            FileHarvest
           </h1>
           <p className="text-gray-400">Extension Settings</p>
         </div>
@@ -87,12 +87,12 @@ const OptionsPage: React.FC = () => {
         <div className="bg-gray-800 rounded-lg border border-gray-700 p-6 mb-6">
           <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
             <span className="text-2xl">🔑</span>
-            Gemini API Key
+            AI API Key
           </h2>
 
           <div className="mb-4">
             <p className="text-gray-300 mb-2">
-              To use the AI Deep Scan feature, you need a Gemini API key.
+              To use the AI Deep Scan feature, you need an AI API key.
             </p>
             <p className="text-gray-400 text-sm mb-4">
               Your API key is stored locally in your browser and never shared with anyone.
@@ -110,7 +110,7 @@ const OptionsPage: React.FC = () => {
                 value={apiKey}
                 onChange={(e) => setApiKey(e.target.value)}
                 onFocus={handleInputFocus}
-                placeholder="Enter your Gemini API key"
+                placeholder="Enter your AI API key"
                 className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all"
               />
             </div>
@@ -183,7 +183,7 @@ const OptionsPage: React.FC = () => {
 
           <div className="mt-4 p-4 bg-yellow-900/20 border border-yellow-700/50 rounded-lg">
             <p className="text-yellow-300 text-sm">
-              <strong>Note:</strong> Gemini API has a free tier with generous limits. Check the{' '}
+              <strong>Note:</strong> Google AI API has a free tier with generous limits. Check the{' '}
               <a
                 href="https://ai.google.dev/pricing"
                 target="_blank"

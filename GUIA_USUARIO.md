@@ -1,6 +1,6 @@
-# Guía de Usuario - Gemini Bulk File Downloader
+# Guía de Usuario - FileHarvest
 
-Bienvenido a **Gemini Bulk File Downloader**, la extensión de Chrome que te permite encontrar y descargar archivos de cualquier página web de forma rápida y sencilla.
+Bienvenido a **FileHarvest**, la extensión de Chrome que te permite encontrar y descargar archivos de cualquier página web de forma rápida y sencilla.
 
 ## Tabla de Contenidos
 
@@ -36,9 +36,9 @@ Si tienes el código fuente:
 
 ## Configuración Inicial
 
-### Obtener tu API Key de Gemini
+### Obtener tu API Key de IA
 
-Para usar la función de **Escaneo Profundo con IA**, necesitas una clave de API de Google Gemini:
+Para usar la función de **Escaneo Profundo con IA**, necesitas una clave de API de Google AI:
 
 1. **Visita Google AI Studio**
    - Ve a [https://aistudio.google.com/app/apikey](https://aistudio.google.com/app/apikey)
@@ -63,7 +63,7 @@ Para usar la función de **Escaneo Profundo con IA**, necesitas una clave de API
 
    O también puedes:
    - Ir a `chrome://extensions/`
-   - Buscar "Gemini Bulk File Downloader"
+   - Buscar "FileHarvest"
    - Hacer clic en "Detalles"
    - Seleccionar "Opciones de la extensión"
 
@@ -88,7 +88,7 @@ El **Escaneo Estándar** analiza el código HTML de la página para encontrar en
 **Pasos:**
 
 1. **Navega a la página web** que quieres escanear
-2. **Haz clic en el icono** de Gemini Bulk File Downloader en tu barra de herramientas
+2. **Haz clic en el icono** de FileHarvest en tu barra de herramientas
 3. La URL de la página actual se cargará automáticamente en el campo de entrada
 4. **Haz clic en "Standard Scan"**
 5. Espera unos segundos mientras se realiza el análisis
@@ -221,7 +221,7 @@ Cuando tienes muchos archivos (más de 20), la extensión los organiza en págin
 
 ### Error: "API key is not configured"
 
-**Causa:** No has configurado tu API Key de Gemini
+**Causa:** No has configurado tu API Key de IA
 
 **Solución:**
 1. Haz clic en el botón **"Open Settings"** en el mensaje de error
@@ -283,9 +283,9 @@ Sí, la extensión:
 - No enviamos información a servidores externos (excepto al proxy para escaneos)
 - Es de código abierto (puedes revisar el código)
 
-### ¿Necesito pagar por Gemini API?
+### ¿Necesito pagar por la API de IA?
 
-Google ofrece un nivel gratuito generoso para Gemini API que es suficiente para uso personal. Solo pagarías si excedes los límites gratuitos, lo cual es poco probable con uso normal.
+Google ofrece un nivel gratuito generoso para su API de IA que es suficiente para uso personal. Solo pagarías si excedes los límites gratuitos, lo cual es poco probable con uso normal.
 
 ### ¿Qué es el escaneo estándar?
 
@@ -341,7 +341,7 @@ La nueva clave reemplazará la anterior.
 
 No, necesitas conexión a Internet para:
 - Escanear páginas (el proxy necesita acceder a la URL)
-- Usar AI Deep Scan (se conecta a la API de Gemini)
+- Usar AI Deep Scan (se conecta a la API de IA)
 - Descargar archivos (vienen del servidor original)
 
 ### ¿Cuántos archivos puedo descargar a la vez?
@@ -363,6 +363,6 @@ Si tienes problemas que no están cubiertos en esta guía:
 
 ---
 
-**¡Gracias por usar Gemini Bulk File Downloader!**
+**¡Gracias por usar FileHarvest!**
 
 Si te gusta la extensión, considera dejar una reseña en Chrome Web Store.

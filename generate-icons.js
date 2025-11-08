@@ -3,7 +3,7 @@ import { readFileSync } from 'fs';
 import { join } from 'path';
 
 const sizes = [16, 32, 48, 128];
-const svgBuffer = readFileSync(join(process.cwd(), 'icons', 'icon.svg'));
+const pngBuffer = readFileSync(join(process.cwd(), 'icons', 'fileharvest.png'));
 
 async function generateIcons() {
   console.log('🎨 Generating icons...\n');
@@ -11,8 +11,11 @@ async function generateIcons() {
   for (const size of sizes) {
     const outputPath = join(process.cwd(), 'icons', `icon${size}.png`);
 
-    await sharp(svgBuffer)
-      .resize(size, size)
+    await sharp(pngBuffer)
+      .resize(size, size, {
+        fit: 'contain',
+        background: { r: 0, g: 0, b: 0, alpha: 0 }
+      })
       .png()
       .toFile(outputPath);
 

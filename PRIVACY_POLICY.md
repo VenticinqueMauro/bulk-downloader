@@ -1,10 +1,10 @@
-# Política de Privacidad - Gemini Bulk File Downloader
+# Política de Privacidad - FileHarvest
 
 **Última actualización:** Noviembre 2025
 
 ## Introducción
 
-Esta Política de Privacidad describe cómo **Gemini Bulk File Downloader** ("la Extensión", "nosotros", "nuestro") recopila, usa y protege la información cuando utilizas nuestra extensión de Chrome.
+Esta Política de Privacidad describe cómo **FileHarvest** ("la Extensión", "nosotros", "nuestro") recopila, usa y protege la información cuando utilizas nuestra extensión de Chrome.
 
 Tu privacidad es importante para nosotros. Esta extensión ha sido diseñada con la privacidad en mente, minimizando la recopilación de datos y manteniendo tu información segura.
 
@@ -26,7 +26,7 @@ Para ser completamente transparentes, **NO recopilamos, almacenamos ni compartim
 
 La extensión almacena la siguiente información **únicamente en tu navegador** utilizando la API `chrome.storage.sync`:
 
-### 1. API Key de Gemini
+### 1. API Key de IA
 - **Qué es:** La clave de API que obtienes de Google AI Studio para usar la función de AI Deep Scan
 - **Dónde se almacena:** En tu navegador local mediante `chrome.storage.sync`
 - **Quién tiene acceso:** Solo tú, a través de tu navegador Chrome
