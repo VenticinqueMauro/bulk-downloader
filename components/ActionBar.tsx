@@ -2,24 +2,18 @@
 /// <reference types="chrome" />
 import React, { useState } from 'react';
 import { FileItem } from '../types';
-import { DownloadIcon, ClipboardIcon, LockIcon } from './icons';
+import { DownloadIcon, ClipboardIcon } from './icons';
 
 interface ActionBarProps {
   selectedCount: number;
-  isProUser: boolean;
-  onProFeatureClick: () => void;
   selectedFiles: FileItem[];
 }
 
-export const ActionBar: React.FC<ActionBarProps> = ({ selectedCount, isProUser, onProFeatureClick, selectedFiles }) => {
+export const ActionBar: React.FC<ActionBarProps> = ({ selectedCount, selectedFiles }) => {
   const [isDownloading, setIsDownloading] = useState(false);
 
   const handleDownloadSelected = async () => {
-    if (!isProUser) {
-      onProFeatureClick();
-      return;
-    }
-     if (!(window.chrome && window.chrome.downloads)) {
+    if (!(window.chrome && window.chrome.downloads)) {
       alert("Download failed. This feature must be run from the Chrome Extension.");
       console.warn("chrome.downloads API not available.");
       return;
@@ -60,10 +54,6 @@ export const ActionBar: React.FC<ActionBarProps> = ({ selectedCount, isProUser, 
   };
 
   const handleCopyLinks = () => {
-    if (!isProUser) {
-      onProFeatureClick();
-      return;
-    }
     const links = selectedFiles.map(f => f.url).join('\n');
     navigator.clipboard.writeText(links).then(() => {
       alert(`${selectedCount} links copied to clipboard!`);
@@ -88,7 +78,6 @@ export const ActionBar: React.FC<ActionBarProps> = ({ selectedCount, isProUser, 
                 >
                     <ClipboardIcon className="h-5 w-5" />
                     <span>Copy Links</span>
-                     {!isProUser && <LockIcon className="h-4 w-4 text-amber-400" />}
                 </button>
                 <button
                     onClick={handleDownloadSelected}
@@ -107,7 +96,6 @@ export const ActionBar: React.FC<ActionBarProps> = ({ selectedCount, isProUser, 
                       <>
                         <DownloadIcon className="h-5 w-5" />
                         <span>Download Selected</span>
-                        {!isProUser && <LockIcon className="h-4 w-4 text-amber-400" />}
                       </>
                     )}
                 </button>

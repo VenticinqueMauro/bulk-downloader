@@ -1,12 +1,11 @@
 
 import React from 'react';
-import { DownloadCloudIcon, SearchIcon, CheckCircleIcon } from './icons';
+import { SearchIcon, CheckCircleIcon } from './icons';
 
 export const WelcomeSplash: React.FC = () => {
     return (
         <div className="flex flex-grow justify-center items-center p-4">
             <div className="p-8 mx-auto max-w-2xl text-center rounded-2xl border bg-gray-800/50 border-gray-700/50 sm:p-12">
-                <DownloadCloudIcon className="mx-auto mb-6 w-16 h-16 text-sky-400" />
                 <h2 className="mb-2 text-3xl font-bold text-white">Welcome to FileHarvest</h2>
                 <p className="mb-8 text-lg text-gray-400">
                     The smartest way to download files from any webpage.

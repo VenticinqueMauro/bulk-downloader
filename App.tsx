@@ -5,32 +5,25 @@ import { UrlInputForm } from './components/UrlInputForm';
 import { FilterBar } from './components/FilterBar';
 import { FileList } from './components/FileList';
 import { ActionBar } from './components/ActionBar';
-import { ProModal } from './components/ProModal';
 import { WelcomeSplash } from './components/WelcomeSplash';
-import { FileItem, FilterType, UserData } from './types';
+import { FileItem, FilterType } from './types';
 import { performStandardScan, scanUrlWithAI, ApiKeyMissingError } from './services/geminiService';
 
 const App: React.FC = () => {
-  const [userData, setUserData] = useState<UserData>({
-    userId: 'user-123',
-    isProUser: false,
-    scanCredits: 5,
-  });
-
   const [allFiles, setAllFiles] = useState<FileItem[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isStandardLoading, setIsStandardLoading] = useState(false);
+  const [isAiLoading, setIsAiLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [currentFilter, setCurrentFilter] = useState<FilterType>('all');
   const [selectedFileUrls, setSelectedFileUrls] = useState<Set<string>>(new Set());
-  const [isProModalOpen, setIsProModalOpen] = useState(false);
   
   const handleStandardScan = async (url: string) => {
-    if (isLoading) return;
+    if (isStandardLoading || isAiLoading) return;
 
-    setIsLoading(true);
+    setIsStandardLoading(true);
     setError(null);
     setSelectedFileUrls(new Set());
-    
+
     try {
       const foundFiles = await performStandardScan(url);
       setAllFiles(foundFiles); // Standard scan replaces all previous results
@@ -38,19 +31,14 @@ const App: React.FC = () => {
       console.error(e);
       setError(e.message || 'Standard Scan failed. Please try again.');
     } finally {
-      setIsLoading(false);
+      setIsStandardLoading(false);
     }
   };
 
   const handleAiScan = async (url: string) => {
-    if (isLoading) return;
-    if (!userData.isProUser && userData.scanCredits <= 0) {
-        setError("You are out of AI scans. Please upgrade to Pro for unlimited deep scans.");
-        setIsProModalOpen(true);
-        return;
-    }
+    if (isStandardLoading || isAiLoading) return;
 
-    setIsLoading(true);
+    setIsAiLoading(true);
     setError(null);
 
     try {
@@ -58,64 +46,16 @@ const App: React.FC = () => {
       // Using a Map to deduplicate files by URL, adding AI results to any existing ones
       const uniqueFiles = Array.from(new Map(foundFiles.map(file => [file.url, file])).values());
       setAllFiles(prevFiles => Array.from(new Map([...prevFiles, ...uniqueFiles].map(f => [f.url, f])).values()));
-
-      if (!userData.isProUser) {
-        setUserData(prev => ({ ...prev, scanCredits: prev.scanCredits - 1 }));
-      }
     } catch (e: any) {
       console.error(e);
       if (e instanceof ApiKeyMissingError) {
-        setError('API key is not configured. Click here to open settings and add your AI API key.');
+        setError('AI key is not configured. Click here to open settings and add your AI API key.');
       } else {
         setError(e.message || 'AI Scan failed. Please check the console for details.');
       }
     } finally {
-      setIsLoading(false);
+      setIsAiLoading(false);
     }
-  };
-
-  const handleBatchScan = async (urls: string[]) => {
-    if (isLoading || !userData.isProUser) return;
-
-    setIsLoading(true);
-    setError(null);
-    setSelectedFileUrls(new Set());
-
-    // Process all URLs in parallel using Promise.allSettled
-    const results = await Promise.allSettled(
-      urls.map(url => scanUrlWithAI(url))
-    );
-
-    // Collect all successful results
-    const allFoundFiles: FileItem[] = [];
-    const failedUrls: string[] = [];
-
-    results.forEach((result, index) => {
-      if (result.status === 'fulfilled') {
-        allFoundFiles.push(...result.value);
-      } else {
-        console.error(`Failed to scan ${urls[index]}:`, result.reason);
-        failedUrls.push(urls[index]);
-      }
-    });
-
-    // Deduplicate files by URL
-    const uniqueFiles = Array.from(
-      new Map(allFoundFiles.map(file => [file.url, file])).values()
-    );
-
-    setAllFiles(prevFiles =>
-      Array.from(new Map([...prevFiles, ...uniqueFiles].map(f => [f.url, f])).values())
-    );
-
-    // Show error if some URLs failed
-    if (failedUrls.length > 0) {
-      setError(
-        `Successfully scanned ${urls.length - failedUrls.length} of ${urls.length} URLs. Failed: ${failedUrls.join(', ')}`
-      );
-    }
-
-    setIsLoading(false);
   };
 
   const filteredFiles = useMemo(() => {
@@ -145,35 +85,19 @@ const App: React.FC = () => {
     return allFiles.filter(f => selectedFileUrls.has(f.url));
   }, [allFiles, selectedFileUrls]);
 
-  const handleTogglePro = () => {
-    setUserData(prev => ({
-      ...prev,
-      isProUser: !prev.isProUser,
-      scanCredits: prev.isProUser ? 5 : prev.scanCredits, // Reset credits if downgrading
-    }));
-    setIsProModalOpen(false); // Close modal on upgrade
-  };
-
   const handleOpenOptions = () => {
     chrome.runtime.openOptionsPage();
   };
 
   return (
     <div className="bg-gray-900 text-white min-h-screen flex flex-col font-sans">
-      <Header
-        isProUser={userData.isProUser}
-        onTogglePro={handleTogglePro}
-        scanCredits={userData.scanCredits}
-      />
+      <Header />
       <main className="container mx-auto px-4 flex-grow flex flex-col">
         <UrlInputForm
           onStandardScan={handleStandardScan}
           onAiScan={handleAiScan}
-          onBatchScan={handleBatchScan}
-          isLoading={isLoading}
-          isProUser={userData.isProUser}
-          scanCredits={userData.scanCredits}
-          onProFeatureClick={() => setIsProModalOpen(true)}
+          isStandardLoading={isStandardLoading}
+          isAiLoading={isAiLoading}
         />
         {error && (
             <div className="my-4 p-4 bg-rose-900/50 border border-rose-700 text-rose-300 rounded-lg flex-shrink-0">
@@ -205,24 +129,16 @@ const App: React.FC = () => {
             />
           </div>
         ) : (
-          !isLoading && <WelcomeSplash />
+          !(isStandardLoading || isAiLoading) && <WelcomeSplash />
         )}
       </main>
-      
+
       {selectedFileUrls.size > 0 && (
-        <ActionBar 
+        <ActionBar
           selectedCount={selectedFileUrls.size}
-          isProUser={userData.isProUser}
-          onProFeatureClick={() => setIsProModalOpen(true)}
           selectedFiles={selectedFiles}
         />
       )}
-
-      <ProModal 
-        isOpen={isProModalOpen}
-        onClose={() => setIsProModalOpen(false)}
-        onUpgrade={handleTogglePro}
-      />
     </div>
   );
 };
