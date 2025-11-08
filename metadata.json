@@ -1,0 +1,5 @@
+{
+  "name": "Gemini Bulk File Downloader",
+  "description": "A powerful freemium tool to scan any webpage and download all detected files in bulk. Features advanced filtering, multi-URL processing, and a sleek, modern interface powered by Gemini.",
+  "requestFramePermissions": []
+}
