@@ -175,10 +175,10 @@ export const performStandardScan = async (url: string): Promise<FileItem[]> => {
 };
 
 
-// Configuration: Set your deployed proxy URL here
-// To deploy your own proxy, see PROXY_SETUP.md
+// Configuration: Proxy URL is loaded from environment variables
+// Set VITE_PROXY_URL in .env file
 // Leave empty to use mock data for testing
-const PROXY_URL = 'https://gemini-proxy-b4y7.vercel.app/api/scrape';
+const PROXY_URL = import.meta.env.VITE_PROXY_URL || '';
 
 /**
  * Fetch URL content via CORS proxy
