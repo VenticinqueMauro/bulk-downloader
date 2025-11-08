@@ -1,8 +1,10 @@
 {
   "manifest_version": 3,
   "name": "FileHarvest",
-  "description": "A powerful freemium tool to scan any webpage and download all detected files in bulk. Features advanced filtering, multi-URL processing, and a sleek, modern interface powered by AI.",
-  "version": "1.0",
+  "description": "Scan any webpage and download all detected files in bulk. Features advanced filtering, real file sizes, and AI-powered deep scanning for complex pages.",
+  "version": "1.0.0",
+  "author": "Mauro Venticinque",
+  "homepage_url": "https://www.m25.com.ar/",
   "icons": {
     "16": "icons/icon16.png",
     "32": "icons/icon32.png",

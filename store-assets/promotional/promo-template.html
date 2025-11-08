@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=440, height=280">
+    <title>FileHarvest Promo - 440x280</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+        }
+
+        .promo-container {
+            width: 440px;
+            height: 280px;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Decorative background pattern */
+        .promo-container::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background-image:
+                repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,.02) 10px, rgba(255,255,255,.02) 20px);
+            animation: slide 20s linear infinite;
+        }
+
+        @keyframes slide {
+            0% { transform: translate(-50%, -50%); }
+            100% { transform: translate(0%, 0%); }
+        }
+
+        .content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+        }
+
+        .logo {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 16px;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+        }
+
+        .title {
+            font-size: 38px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #00d4ff 0%, #0099ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            font-size: 15px;
+            color: #e0e0e0;
+            font-weight: 400;
+            letter-spacing: 0.3px;
+        }
+
+        .features {
+            margin-top: 12px;
+            display: flex;
+            gap: 16px;
+            font-size: 11px;
+            color: #aaaaaa;
+        }
+
+        .feature {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .feature::before {
+            content: '✓';
+            color: #00d4ff;
+            font-weight: bold;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="promo-container">
+        <div class="content">
+            <!-- Replace this with actual FileHarvest logo -->
+            <img src="../../fileharvest.png" alt="FileHarvest Logo" class="logo">
+
+            <h1 class="title">FileHarvest</h1>
+            <p class="subtitle">Download Files from Any Webpage</p>
+
+            <div class="features">
+                <div class="feature">Fast Scanning</div>
+                <div class="feature">AI Powered</div>
+                <div class="feature">Bulk Downloads</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Instructions to capture as image:
+        // 1. Open this file in Chrome
+        // 2. Press F12 to open DevTools
+        // 3. Click the device toolbar icon (Ctrl+Shift+M)
+        // 4. Set dimensions to 440x280
+        // 5. Take screenshot:
+        //    - Windows: Win+Shift+S or use Chrome DevTools > Capture screenshot
+        //    - Mac: Cmd+Shift+4
+        // 6. Save as: tile-440x280.png
+
+        console.log('FileHarvest Promotional Image Template');
+        console.log('Dimensions: 440x280 pixels');
+        console.log('To capture: Use DevTools > Capture Screenshot or screen capture tool');
+    </script>
+</body>
+</html>

@@ -6,7 +6,9 @@
       "Bash(git commit:*)",
       "Bash(git push)",
       "Bash(copy:*)",
-      "Bash(npm run generate-icons:*)"
+      "Bash(npm run generate-icons:*)",
+      "Bash(npm run clean:*)",
+      "Bash(powershell -Command:*)"
     ],
     "deny": [],
     "ask": []
