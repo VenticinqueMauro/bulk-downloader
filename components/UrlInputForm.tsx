@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { LockIcon, SearchIcon, LayersIcon, SparklesIcon } from './icons';
 
 interface UrlInputFormProps {
@@ -16,6 +16,22 @@ export const UrlInputForm: React.FC<UrlInputFormProps> = ({ onStandardScan, onAi
   const [url, setUrl] = useState('');
   const [batchUrls, setBatchUrls] = useState('');
   const [isBatchMode, setIsBatchMode] = useState(false);
+
+  // Auto-fill current tab URL on mount
+  useEffect(() => {
+    const getCurrentTabUrl = async () => {
+      try {
+        const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+        if (tab?.url) {
+          setUrl(tab.url);
+        }
+      } catch (error) {
+        console.error('Error getting current tab URL:', error);
+      }
+    };
+
+    getCurrentTabUrl();
+  }, []);
 
   const handleSingleUrlSubmit = (scanType: 'standard' | 'ai') => {
     if (isLoading || !url.trim()) return;

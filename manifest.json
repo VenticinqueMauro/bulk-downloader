@@ -9,7 +9,9 @@
   "options_page": "options.html",
   "permissions": [
     "downloads",
-    "storage"
+    "storage",
+    "activeTab",
+    "tabs"
   ],
   "host_permissions": [
     "<all_urls>"
