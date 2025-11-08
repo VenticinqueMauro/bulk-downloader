@@ -1,22 +1,38 @@
 {
   "name": "gemini-bulk-file-downloader",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "description": "A powerful Chrome extension to scan webpages and download files in bulk, powered by Gemini AI",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+    "build": "vite build && npm run copy-manifest",
+    "copy-manifest": "node -e \"require('fs').copyFileSync('manifest.json', 'dist/manifest.json')\"",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "clean": "node -e \"require('fs').rmSync('dist', { recursive: true, force: true })\""
   },
   "dependencies": {
-    "react-dom": "^19.2.0",
     "@google/genai": "^1.29.0",
-    "react": "^19.2.0"
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
   },
   "devDependencies": {
+    "@types/chrome": "^0.0.278",
     "@types/node": "^22.14.0",
     "@vitejs/plugin-react": "^5.0.0",
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^3.4.18",
     "typescript": "~5.8.2",
     "vite": "^6.2.0"
-  }
+  },
+  "author": "",
+  "keywords": [
+    "chrome-extension",
+    "gemini",
+    "bulk-download",
+    "file-downloader",
+    "ai"
+  ]
 }
