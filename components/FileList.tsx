@@ -53,9 +53,9 @@ export const FileList: React.FC<FileListProps> = ({ files, selectedFileUrls, onS
   };
 
   return (
-    <div className="flex-grow bg-gray-800/50 rounded-xl border border-gray-700/50 overflow-hidden flex flex-col">
+    <div className="flex-grow min-h-0 bg-gray-800/50 rounded-xl border border-gray-700/50 overflow-hidden flex flex-col">
       {/* Search Bar */}
-      <div className="px-4 py-3 bg-gray-900/40 border-b border-gray-700">
+      <div className="px-4 py-3 bg-gray-900/40 border-b border-gray-700 flex-shrink-0">
         <div className="relative">
           <input
             type="text"
@@ -91,7 +91,7 @@ export const FileList: React.FC<FileListProps> = ({ files, selectedFileUrls, onS
       </div>
 
       {/* Header */}
-      <div className="flex items-center px-4 py-3 bg-gray-900/40 border-b border-gray-700 text-sm font-medium text-gray-400">
+      <div className="flex items-center px-4 py-3 bg-gray-900/40 border-b border-gray-700 text-sm font-medium text-gray-400 flex-shrink-0">
         <div className="w-10 flex-shrink-0 flex items-center">
           <input
             type="checkbox"
@@ -110,7 +110,7 @@ export const FileList: React.FC<FileListProps> = ({ files, selectedFileUrls, onS
       </div>
 
       {/* Body */}
-      <div className="flex-grow overflow-y-auto">
+      <div className="flex-grow min-h-0 overflow-y-auto">
         {paginatedFiles.length === 0 ? (
           <div className="flex items-center justify-center h-full text-gray-500">
             {searchQuery ? 'No files match your search.' : 'No files match the current filter.'}
@@ -137,7 +137,7 @@ export const FileList: React.FC<FileListProps> = ({ files, selectedFileUrls, onS
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="px-4 py-3 bg-gray-900/40 border-t border-gray-700 flex items-center justify-between">
+        <div className="px-4 py-3 bg-gray-900/40 border-t border-gray-700 flex items-center justify-between flex-shrink-0">
           <div className="text-sm text-gray-400">
             Page {currentPage} of {totalPages} • Showing {startIndex + 1}-{Math.min(endIndex, filteredFiles.length)} of {filteredFiles.length}
           </div>
