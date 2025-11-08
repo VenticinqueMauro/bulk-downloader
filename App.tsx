@@ -159,13 +159,13 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="bg-gray-900 text-white h-screen flex flex-col font-sans overflow-hidden">
+    <div className="bg-gray-900 text-white min-h-screen flex flex-col font-sans">
       <Header
         isProUser={userData.isProUser}
         onTogglePro={handleTogglePro}
         scanCredits={userData.scanCredits}
       />
-      <main className="container mx-auto px-4 flex-grow flex flex-col overflow-hidden">
+      <main className="container mx-auto px-4 flex-grow flex flex-col">
         <UrlInputForm
           onStandardScan={handleStandardScan}
           onAiScan={handleAiScan}
@@ -191,7 +191,7 @@ const App: React.FC = () => {
             </div>
         )}
         {allFiles.length > 0 ? (
-          <div className="flex-grow flex flex-col min-h-0 overflow-hidden">
+          <div className="flex flex-col min-h-0 mb-4">
             <FilterBar
                 currentFilter={currentFilter}
                 onFilterChange={setCurrentFilter}

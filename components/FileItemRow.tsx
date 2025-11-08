@@ -36,8 +36,23 @@ export const FileItemRow: React.FC<FileItemRowProps> = ({ file, isSelected, onTo
   const handleDownload = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (window.chrome && window.chrome.downloads) {
+      // Extract extension from URL if filename doesn't have one
+      let finalFilename = file.name;
+      const hasExtension = /\.[a-zA-Z0-9]+$/.test(finalFilename);
+
+      if (!hasExtension) {
+        // Try to get extension from URL
+        const urlParts = file.url.split('.');
+        if (urlParts.length > 1) {
+          const urlExt = urlParts[urlParts.length - 1].split('?')[0].split('#')[0];
+          if (urlExt && urlExt.length <= 5) {
+            finalFilename = `${finalFilename}.${urlExt}`;
+          }
+        }
+      }
+
       // Sanitize filename to remove characters forbidden by filesystems
-      const sanitizedFilename = file.name.replace(/[<>:"/\\|?*]+/g, '_');
+      const sanitizedFilename = finalFilename.replace(/[<>:"/\\|?*]+/g, '_');
       chrome.downloads.download({
         url: file.url,
         filename: sanitizedFilename,

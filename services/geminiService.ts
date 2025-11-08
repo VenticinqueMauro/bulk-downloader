@@ -60,16 +60,63 @@ function getFileType(urlString: string): string {
 }
 
 /**
+ * Extract file extension from URL
+ */
+function getFileExtension(urlString: string): string {
+  try {
+    const pathname = new URL(urlString).pathname;
+    const parts = pathname.split('.');
+    if (parts.length > 1) {
+      return '.' + parts.pop()?.toLowerCase();
+    }
+    return '';
+  } catch {
+    return '';
+  }
+}
+
+/**
+ * Fetch file size via HEAD request
+ * Returns 0 if unable to determine size
+ */
+async function fetchFileSize(url: string): Promise<number> {
+  try {
+    const response = await fetch(url, {
+      method: 'HEAD',
+      mode: 'cors',
+      cache: 'no-cache'
+    });
+
+    if (response.ok) {
+      const contentLength = response.headers.get('content-length');
+      if (contentLength) {
+        return parseInt(contentLength, 10);
+      }
+    }
+  } catch (error) {
+    // Silently fail - CORS, network issues, etc.
+    console.debug(`Could not fetch size for ${url}:`, error);
+  }
+  return 0;
+}
+
+/**
  * Extract filename from URL
  */
 function getFileName(urlString: string, linkText: string = ''): string {
   try {
     const pathname = new URL(urlString).pathname;
     const filename = pathname.split('/').pop() || '';
+    const extension = getFileExtension(urlString);
 
     // Use link text if available and meaningful
     if (linkText && linkText.length > 0 && linkText.length < 100) {
-      return linkText.trim();
+      const linkTextTrimmed = linkText.trim();
+      // If link text doesn't have extension, append it
+      if (extension && !linkTextTrimmed.toLowerCase().endsWith(extension.toLowerCase())) {
+        return linkTextTrimmed + extension;
+      }
+      return linkTextTrimmed;
     }
 
     // Decode and use filename
@@ -165,6 +212,17 @@ export const performStandardScan = async (url: string): Promise<FileItem[]> => {
 
     const results = Array.from(foundFiles.values());
     console.log(`✅ Standard Scan found ${results.length} files`);
+
+    // Fetch file sizes in parallel (limit to avoid overwhelming the network)
+    const BATCH_SIZE = 10;
+    for (let i = 0; i < results.length; i += BATCH_SIZE) {
+      const batch = results.slice(i, i + BATCH_SIZE);
+      await Promise.all(
+        batch.map(async (file) => {
+          file.size = await fetchFileSize(file.url);
+        })
+      );
+    }
 
     return results;
 

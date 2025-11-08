@@ -26,10 +26,25 @@ export const ActionBar: React.FC<ActionBarProps> = ({ selectedCount, isProUser, 
     }
 
     setIsDownloading(true);
-    
+
     for (const file of selectedFiles) {
       try {
-        const sanitizedFilename = file.name.replace(/[<>:"/\\|?*]+/g, '_');
+        // Extract extension from URL if filename doesn't have one
+        let finalFilename = file.name;
+        const hasExtension = /\.[a-zA-Z0-9]+$/.test(finalFilename);
+
+        if (!hasExtension) {
+          // Try to get extension from URL
+          const urlParts = file.url.split('.');
+          if (urlParts.length > 1) {
+            const urlExt = urlParts[urlParts.length - 1].split('?')[0].split('#')[0];
+            if (urlExt && urlExt.length <= 5) {
+              finalFilename = `${finalFilename}.${urlExt}`;
+            }
+          }
+        }
+
+        const sanitizedFilename = finalFilename.replace(/[<>:"/\\|?*]+/g, '_');
         chrome.downloads.download({
           url: file.url,
           filename: sanitizedFilename
@@ -40,7 +55,7 @@ export const ActionBar: React.FC<ActionBarProps> = ({ selectedCount, isProUser, 
         console.error(`Failed to initiate download for ${file.name}:`, error);
       }
     }
-    
+
     setIsDownloading(false);
   };
 
