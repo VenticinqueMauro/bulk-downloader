@@ -6,8 +6,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && npm run copy-manifest",
-    "copy-manifest": "node -e \"require('fs').copyFileSync('manifest.json', 'dist/manifest.json')\"",
+    "build": "vite build && npm run copy-assets",
+    "copy-assets": "node -e \"const fs = require('fs'); fs.copyFileSync('manifest.json', 'dist/manifest.json'); fs.cpSync('icons', 'dist/icons', {recursive: true});\"",
+    "generate-icons": "node generate-icons.js",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
     "clean": "node -e \"require('fs').rmSync('dist', { recursive: true, force: true })\""
@@ -23,6 +24,7 @@
     "@vitejs/plugin-react": "^5.0.0",
     "autoprefixer": "^10.4.21",
     "postcss": "^8.5.6",
+    "sharp": "^0.34.5",
     "tailwindcss": "^3.4.18",
     "typescript": "~5.8.2",
     "vite": "^6.2.0"
