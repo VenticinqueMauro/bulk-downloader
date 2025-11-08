@@ -7,26 +7,49 @@ interface UrlInputFormProps {
   onAiScan: (url: string) => void;
   isStandardLoading: boolean;
   isAiLoading: boolean;
+  onClearResults: () => void;
+  lastScannedUrl: string;
 }
 
-export const UrlInputForm: React.FC<UrlInputFormProps> = ({ onStandardScan, onAiScan, isStandardLoading, isAiLoading }) => {
+export const UrlInputForm: React.FC<UrlInputFormProps> = ({
+  onStandardScan,
+  onAiScan,
+  isStandardLoading,
+  isAiLoading,
+  onClearResults,
+  lastScannedUrl
+}) => {
   const [url, setUrl] = useState('');
+  const [lastFetchedUrl, setLastFetchedUrl] = useState('');
 
-  // Auto-fill current tab URL on mount
+  // Auto-fill current tab URL on mount and when tab changes
   useEffect(() => {
     const getCurrentTabUrl = async () => {
       try {
         const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-        if (tab?.url) {
+        if (tab?.url && tab.url !== lastFetchedUrl) {
+          // If the URL changed and we have previous scan results, clear them
+          if (lastScannedUrl && lastScannedUrl !== tab.url && lastFetchedUrl !== '') {
+            onClearResults();
+          }
           setUrl(tab.url);
+          setLastFetchedUrl(tab.url);
         }
       } catch (error) {
         console.error('Error getting current tab URL:', error);
       }
     };
 
+    // Initial fetch
     getCurrentTabUrl();
-  }, []);
+
+    // Check for URL updates periodically when popup is visible
+    const interval = setInterval(getCurrentTabUrl, 500);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [lastFetchedUrl, lastScannedUrl, onClearResults]);
 
   const handleSingleUrlSubmit = (scanType: 'standard' | 'ai') => {
     if (isStandardLoading || isAiLoading || !url.trim()) return;

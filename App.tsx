@@ -16,13 +16,21 @@ const App: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [currentFilter, setCurrentFilter] = useState<FilterType>('all');
   const [selectedFileUrls, setSelectedFileUrls] = useState<Set<string>>(new Set());
+  const [lastScannedUrl, setLastScannedUrl] = useState<string>('');
   
+  const handleClearResults = useCallback(() => {
+    setAllFiles([]);
+    setSelectedFileUrls(new Set());
+    setError(null);
+  }, []);
+
   const handleStandardScan = async (url: string) => {
     if (isStandardLoading || isAiLoading) return;
 
     setIsStandardLoading(true);
     setError(null);
     setSelectedFileUrls(new Set());
+    setLastScannedUrl(url);
 
     try {
       const foundFiles = await performStandardScan(url);
@@ -40,6 +48,7 @@ const App: React.FC = () => {
 
     setIsAiLoading(true);
     setError(null);
+    setLastScannedUrl(url);
 
     try {
       const foundFiles = await scanUrlWithAI(url);
@@ -98,6 +107,8 @@ const App: React.FC = () => {
           onAiScan={handleAiScan}
           isStandardLoading={isStandardLoading}
           isAiLoading={isAiLoading}
+          onClearResults={handleClearResults}
+          lastScannedUrl={lastScannedUrl}
         />
         {error && (
             <div className="my-4 p-4 bg-rose-900/50 border border-rose-700 text-rose-300 rounded-lg flex-shrink-0">
