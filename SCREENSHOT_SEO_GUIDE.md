@@ -18,7 +18,7 @@
 - Lista de archivos visible con nombres, tamaños, tipos
 - Header con logo y badge Beta
 - Botón de donación visible
-- **Caption sugerida:** "Scan any webpage and instantly find all downloadable files"
+- **Caption sugerida:** "Find all files instantly"
 
 **Cómo capturar:**
 1. Abre la extensión
@@ -34,7 +34,7 @@
 - Presets visibles
 - Footer sticky con botones de acción
 - Contador de categorías seleccionadas
-- **Caption sugerida:** "Customize your scan with advanced filters and presets"
+- **Caption sugerida:** "Customize what to scan"
 
 **Cómo capturar:**
 1. Haz click en "Scan Page" o "AI Scan"
@@ -49,7 +49,7 @@
 - FilterBar con múltiples tipos (All, Images, Videos, etc.)
 - Resultados filtrados por tipo específico
 - Contador de archivos por tipo visible
-- **Caption sugerida:** "Filter by type: Images, Videos, Audio, Documents, Archives & more"
+- **Caption sugerida:** "Filter by file type"
 
 **Cómo capturar:**
 1. Con resultados de scan, haz click en un filtro específico (ej: "Images")
@@ -65,7 +65,7 @@
 - Link a Google AI Studio visible
 - Explicación de cómo obtener la API key gratuita
 - Botón "Save API Key"
-- **Caption sugerida:** "Optional AI Deep Scan - Get your free Google Gemini API key"
+- **Caption sugerida:** "AI-powered scanning"
 
 **Cómo capturar:**
 1. Click derecho en el ícono de la extensión → "Opciones"
@@ -87,7 +87,7 @@
 - Action Bar sticky en la parte inferior
 - Botones "Copy Links" y "Download Selected"
 - Contador de archivos seleccionados
-- **Caption sugerida:** "Select files and download in bulk with one click"
+- **Caption sugerida:** "Download in bulk"
 
 **Cómo capturar:**
 1. Selecciona varios archivos (3-5)
@@ -104,7 +104,7 @@
 - Las 3 features explicadas (⚡ Standard, 🤖 AI, 🎯 Filtering)
 - Link a configuración de API key
 - Footer "No ads, no tracking, no subscriptions"
-- **Caption sugerida:** "100% free forever - No ads, no tracking, no subscriptions"
+- **Caption sugerida:** "100% free, no ads"
 
 **Cómo capturar:**
 1. Limpia los resultados (click en logo)
@@ -218,6 +218,37 @@ Los screenshots impactan directamente en:
 - Usa palabras como: "bulk", "download", "free", "AI", "filter", "scan"
 - Describe qué hace, no solo qué muestra
 - Sé claro y directo
+
+---
+
+## 🔤 **Especificaciones de Tipografía para Captions**
+
+### **Tipografía Recomendada:** Inter Bold
+- **Fuente:** [Inter](https://fonts.google.com/specimen/Inter) (gratis en Google Fonts)
+- **Peso:** Bold (700) o SemiBold (600)
+- **Tamaño:** 28-36px (para screenshots 1280×800)
+
+### **Configuración de Texto:**
+```
+Color: Blanco (#FFFFFF)
+Fondo: Negro semi-transparente rgba(0, 0, 0, 0.75)
+Padding: 16-20px vertical, 32-40px horizontal
+Posición: Banner superior o inferior (consistente)
+Máximo: 1 línea de texto
+```
+
+### **Captions Actualizados (Breves):**
+1. "Find all files instantly"
+2. "Customize what to scan"
+3. "Filter by file type"
+4. "AI-powered scanning"
+5. "Download in bulk"
+6. "100% free, no ads" (opcional)
+
+### **Herramientas:**
+- **Figma** (recomendado)
+- **Canva** (templates listos)
+- **Photopea** (alternativa gratis a Photoshop)
 
 ---
 
