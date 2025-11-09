@@ -58,18 +58,26 @@
 
 ---
 
-### **Screenshot 4: Mensaje de Bienvenida (Welcome)**
+### **Screenshot 4: Configuración de API Key para AI Scan** ⚙️
 **Lo que debe mostrar:**
-- Pantalla inicial con badge "100% Free Forever"
-- Las 3 features explicadas (⚡ Standard, 🤖 AI, 🎯 Filtering)
-- Link a configuración de API key
-- Footer "No ads, no tracking, no subscriptions"
-- **Caption sugerida:** "100% free forever - No ads, no tracking, no subscriptions"
+- Página de opciones (options.html) abierta
+- Campo para ingresar Gemini API Key
+- Link a Google AI Studio visible
+- Explicación de cómo obtener la API key gratuita
+- Botón "Save API Key"
+- **Caption sugerida:** "Optional AI Deep Scan - Get your free Google Gemini API key"
 
 **Cómo capturar:**
-1. Limpia los resultados (click en logo)
-2. Captura la pantalla inicial de bienvenida
-3. Muestra la propuesta de valor
+1. Click derecho en el ícono de la extensión → "Opciones"
+2. Muestra la pantalla de configuración de API key
+3. Asegúrate que se vea el link a Google AI Studio
+4. Campo de API key puede estar vacío o con placeholder
+
+**Por qué es importante:**
+- Muestra transparencia sobre el uso de IA
+- Educa a los usuarios sobre cómo empezar con AI scan
+- Destaca que la API key es gratuita (Google free tier)
+- Demuestra que el usuario tiene control total
 
 ---
 
@@ -85,6 +93,28 @@
 1. Selecciona varios archivos (3-5)
 2. Muestra el Action Bar que aparece
 3. Resalta la facilidad de descarga en masa
+
+---
+
+### **Screenshot 6 (OPCIONAL): Mensaje de Bienvenida** 🎊
+**Si decides reemplazar alguno de los 5 anteriores:**
+
+**Lo que debe mostrar:**
+- Pantalla inicial con badge "100% Free Forever"
+- Las 3 features explicadas (⚡ Standard, 🤖 AI, 🎯 Filtering)
+- Link a configuración de API key
+- Footer "No ads, no tracking, no subscriptions"
+- **Caption sugerida:** "100% free forever - No ads, no tracking, no subscriptions"
+
+**Cómo capturar:**
+1. Limpia los resultados (click en logo)
+2. Captura la pantalla inicial de bienvenida
+3. Muestra la propuesta de valor
+
+**Cuándo usar este en lugar de otro:**
+- Si quieres enfatizar "gratis" más que "AI"
+- Si tu audiencia es más casual que técnica
+- Si quieres mostrar la propuesta de valor antes que la configuración
 
 ---
 
@@ -141,26 +171,39 @@ Puedes usar herramientas como:
 
 ## 📋 **Checklist antes de subir:**
 
-- [ ] 5 screenshots tomados
+- [ ] Screenshot 1: Interfaz con resultados ⭐
+- [ ] Screenshot 2: Modal de configuración
+- [ ] Screenshot 3: Filtros en acción
+- [ ] Screenshot 4: Configuración de API key (IMPORTANTE)
+- [ ] Screenshot 5: Action bar con descarga
+- [ ] Screenshot 6 (opcional): Welcome message
 - [ ] Todos los screenshots son 1280×800 o 640×400
 - [ ] Formato PNG (mejor calidad)
-- [ ] Sin información sensible visible
+- [ ] Sin información sensible visible (API keys, URLs personales)
 - [ ] Captions escritas para cada screenshot
 - [ ] Imagen promocional 1400×560 (opcional pero recomendada)
-- [ ] Screenshots muestran la versión más reciente
+- [ ] Screenshots muestran la versión más reciente (con badge Beta)
 - [ ] Sin bugs visibles en las capturas
+- [ ] Botón de donación visible en header (muestra transparencia)
 
 ---
 
 ## 🎯 **Orden Sugerido de Screenshots en Chrome Web Store:**
 
-1. **Screenshot 1** - Interfaz con resultados (hero)
-2. **Screenshot 4** - Welcome message (muestra valor)
-3. **Screenshot 2** - Modal de configuración (features)
-4. **Screenshot 3** - Filtros (usabilidad)
-5. **Screenshot 5** - Action bar (resultado final)
+1. **Screenshot 1** - Interfaz con resultados (hero shot - primera impresión)
+2. **Screenshot 2** - Modal de configuración de scan (muestra personalización)
+3. **Screenshot 4** - Configuración API key (destaca AI como diferenciador)
+4. **Screenshot 3** - Filtros en acción (demuestra usabilidad)
+5. **Screenshot 5** - Action bar con descarga (muestra resultado final)
 
-Este orden cuenta una historia: "Qué verás → Por qué es útil → Cómo funciona → Qué puedes hacer"
+Este orden cuenta una historia: "Qué verás → Cómo personalizarlo → Poder de AI → Facilidad de uso → Resultado"
+
+**Alternativa (si prefieres destacar el AI primero):**
+1. Screenshot 1 - Interfaz con resultados
+2. Screenshot 4 - API key setup (destaca AI inmediatamente)
+3. Screenshot 2 - Modal de configuración
+4. Screenshot 3 - Filtros
+5. Screenshot 5 - Action bar
 
 ---
 
