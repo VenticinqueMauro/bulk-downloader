@@ -229,12 +229,28 @@ Los screenshots impactan directamente en:
 - **Tamaño:** 28-36px (para screenshots 1280×800)
 
 ### **Configuración de Texto:**
+
+**Opción 1 - Blanco (Universal):**
 ```
-Color: Blanco (#FFFFFF)
-Fondo: Negro semi-transparente rgba(0, 0, 0, 0.75)
+Color: #FFFFFF (blanco)
+Fondo: rgba(0, 0, 0, 0.75)
 Padding: 16-20px vertical, 32-40px horizontal
 Posición: Banner superior o inferior (consistente)
 Máximo: 1 línea de texto
+```
+
+**Opción 2 - Celeste (Brand Color):**
+```
+Color: #38BDF8 (sky-400)
+Fondo: rgba(0, 0, 0, 0.80)
+Contraste: Excelente
+```
+
+**Opción 3 - Amarillo (Alta Visibilidad):**
+```
+Color: #FCD34D (yellow-300)
+Fondo: rgba(0, 0, 0, 0.85)
+Contraste: Muy bueno
 ```
 
 ### **Captions Actualizados (Breves):**
@@ -249,6 +265,61 @@ Máximo: 1 línea de texto
 - **Figma** (recomendado)
 - **Canva** (templates listos)
 - **Photopea** (alternativa gratis a Photoshop)
+
+---
+
+## 🎨 **Paleta de Colores Completa de FileHarvest**
+
+Para mantener consistencia de marca en los screenshots:
+
+### **Colores Principales:**
+
+**Celeste (Sky) - Color de marca:**
+```
+sky-300:  #7DD3FC  (muy claro)
+sky-400:  #38BDF8  (principal - recomendado para captions)
+sky-500:  #0EA5E9  (medio)
+sky-600:  #0284C7  (oscuro)
+```
+
+**Amarillo (Yellow) - Avisos y highlights:**
+```
+yellow-200: #FEF08A  (muy claro)
+yellow-300: #FCD34D  (principal - bueno para captions)
+yellow-400: #FBBF24  (vibrante)
+yellow-700: #B45309  (oscuro)
+```
+
+**Verde (Emerald) - "Free" badge:**
+```
+emerald-400: #34D399  (principal)
+emerald-500: #10B981  (medio)
+```
+
+**Rosa (Rose) - Donaciones:**
+```
+rose-400: #FB7185  (corazón de donación)
+rose-300: #FDA4AF  (hover)
+```
+
+**Morado (Purple) - Acentos:**
+```
+purple-400: #C084FC
+purple-500: #A855F7  (gradientes)
+purple-600: #9333EA
+```
+
+### **Colores Neutros (Fondos):**
+```
+gray-700: #374151  (elementos interactivos)
+gray-800: #1F2937  (tarjetas, modales)
+gray-900: #111827  (fondo principal)
+```
+
+### **Recomendación para Captions:**
+- **Más profesional:** Blanco (#FFFFFF)
+- **Más branded:** Celeste (#38BDF8)
+- **Más llamativo:** Amarillo (#FCD34D)
 
 ---
 
