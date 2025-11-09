@@ -1,7 +1,10 @@
 # FileHarvest - Chrome Web Store Listing
 
+## Extension Name (45 characters max)
+FileHarvest - Bulk File Downloader
+
 ## Short Description (132 characters max)
-Scan webpages and download files in bulk. Features filtering, real file sizes, and AI-powered scanning.
+Download files in bulk from any webpage. AI-powered scanning, advanced filters, real sizes. 100% free, no ads, no tracking.
 
 ## Detailed Description
 
