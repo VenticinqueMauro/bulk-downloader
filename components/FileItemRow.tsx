@@ -2,7 +2,22 @@
 /// <reference types="chrome" />
 import React from 'react';
 import { FileItem } from '../types';
-import { DownloadIcon, ImageIcon, VideoIcon, MusicIcon, DocumentIcon, ArchiveIcon, OtherIcon } from './icons';
+import {
+  DownloadIcon,
+  ImageIcon,
+  VideoIcon,
+  MusicIcon,
+  DocumentIcon,
+  ArchiveIcon,
+  FontIcon,
+  StyleIcon,
+  ScriptIcon,
+  CodeIcon,
+  Model3DIcon,
+  DataIcon,
+  ExecutableIcon,
+  OtherIcon
+} from './icons';
 
 interface FileItemRowProps {
   file: FileItem;
@@ -20,15 +35,40 @@ const formatBytes = (bytes: number, decimals = 2): string => {
 };
 
 const getFileTypeIcon = (type: FileItem['type']): React.ReactElement => {
-    const props = { className: "h-6 w-6" };
+    const props = { className: "h-5 w-5" };
     switch (type) {
         case 'Image': return <ImageIcon {...props} />;
         case 'Video': return <VideoIcon {...props} />;
         case 'Audio': return <MusicIcon {...props} />;
         case 'Document': return <DocumentIcon {...props} />;
         case 'Archive': return <ArchiveIcon {...props} />;
+        case 'Font': return <FontIcon {...props} />;
+        case 'Style': return <StyleIcon {...props} />;
+        case 'Script': return <ScriptIcon {...props} />;
+        case 'Code': return <CodeIcon {...props} />;
+        case 'Model3D': return <Model3DIcon {...props} />;
+        case 'Data': return <DataIcon {...props} />;
+        case 'Executable': return <ExecutableIcon {...props} />;
         default: return <OtherIcon {...props} />;
     }
+}
+
+const getFileTypeColor = (type: FileItem['type']): string => {
+  switch (type) {
+    case 'Image': return 'bg-purple-500/20 text-purple-300';
+    case 'Video': return 'bg-rose-500/20 text-rose-300';
+    case 'Audio': return 'bg-emerald-500/20 text-emerald-300';
+    case 'Document': return 'bg-blue-500/20 text-blue-300';
+    case 'Archive': return 'bg-orange-500/20 text-orange-300';
+    case 'Font': return 'bg-yellow-500/20 text-yellow-300';
+    case 'Style': return 'bg-pink-500/20 text-pink-300';
+    case 'Script': return 'bg-cyan-500/20 text-cyan-300';
+    case 'Code': return 'bg-green-500/20 text-green-300';
+    case 'Model3D': return 'bg-indigo-500/20 text-indigo-300';
+    case 'Data': return 'bg-teal-500/20 text-teal-300';
+    case 'Executable': return 'bg-red-500/20 text-red-300';
+    default: return 'bg-gray-500/20 text-gray-300';
+  }
 }
 
 export const FileItemRow: React.FC<FileItemRowProps> = ({ file, isSelected, onToggleSelect }) => {
@@ -64,8 +104,8 @@ export const FileItemRow: React.FC<FileItemRowProps> = ({ file, isSelected, onTo
   };
 
   return (
-    <div 
-        className={`flex items-center px-4 py-3 border-b border-gray-700/50 transition-colors duration-150 ${isSelected ? 'bg-sky-900/30' : 'hover:bg-gray-700/40'}`}
+    <div
+        className={`flex items-center px-3 py-2 border-b border-gray-700/50 transition-colors duration-150 min-w-0 ${isSelected ? 'bg-sky-900/30' : 'hover:bg-gray-700/40'}`}
         onClick={onToggleSelect}
     >
       <div className="w-10 flex-shrink-0">
@@ -73,45 +113,38 @@ export const FileItemRow: React.FC<FileItemRowProps> = ({ file, isSelected, onTo
           type="checkbox"
           checked={isSelected}
           onChange={onToggleSelect}
-          className="h-4 w-4 rounded bg-gray-700 border-gray-500 text-sky-500 focus:ring-sky-500 cursor-pointer"
+          className="h-3.5 w-3.5 rounded bg-gray-700 border-gray-500 text-sky-500 focus:ring-sky-500 cursor-pointer"
         />
       </div>
-      <div className="flex-grow grid grid-cols-12 gap-4 items-center">
-        <div className="col-span-6 md:col-span-7 flex items-center gap-3 truncate">
+      <div className="flex-1 flex items-center gap-3 min-w-0">
+        <div className="flex-1 flex items-center gap-2 min-w-0">
             <div className="text-gray-400 flex-shrink-0">{getFileTypeIcon(file.type)}</div>
-            <a 
-              href={file.url} 
-              target="_blank" 
-              rel="noopener noreferrer" 
+            <a
+              href={file.url}
+              target="_blank"
+              rel="noopener noreferrer"
               onClick={(e) => e.stopPropagation()}
-              className="truncate text-gray-200 hover:underline" 
+              className="truncate text-sm text-gray-200 hover:underline min-w-0"
               title={file.name}
             >
               {file.name}
             </a>
         </div>
-        <div className="col-span-3 md:col-span-2 text-right text-gray-300 font-mono text-sm">
+        <div className="w-20 text-right text-gray-300 font-mono text-xs flex-shrink-0">
           {file.size > 0 ? formatBytes(file.size) : 'N/A'}
         </div>
-        <div className="col-span-3 md:col-span-2 text-center">
-             <span className={`px-2 py-1 text-xs font-semibold rounded-full ${
-                file.type === 'Image' ? 'bg-purple-500/20 text-purple-300' :
-                file.type === 'Video' ? 'bg-rose-500/20 text-rose-300' :
-                file.type === 'Audio' ? 'bg-emerald-500/20 text-emerald-300' :
-                file.type === 'Document' ? 'bg-blue-500/20 text-blue-300' :
-                file.type === 'Archive' ? 'bg-orange-500/20 text-orange-300' :
-                'bg-gray-500/20 text-gray-300'
-             }`}>
+        <div className="w-24 text-center flex-shrink-0">
+             <span className={`px-2 py-0.5 text-xs font-semibold rounded-full whitespace-nowrap ${getFileTypeColor(file.type)}`}>
                 {file.type}
             </span>
         </div>
-        <div className="hidden md:flex col-span-1 justify-end">
-          <button 
+        <div className="w-10 flex-shrink-0 hidden md:flex justify-end">
+          <button
             onClick={handleDownload}
             title="Download file"
-            className="p-2 text-gray-400 hover:text-white hover:bg-gray-600 rounded-full transition-colors"
+            className="p-1.5 text-gray-400 hover:text-white hover:bg-gray-600 rounded-full transition-colors"
           >
-            <DownloadIcon className="h-5 w-5" />
+            <DownloadIcon className="h-4 w-4" />
           </button>
         </div>
       </div>
