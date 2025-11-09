@@ -2,7 +2,7 @@
 
 Una poderosa extensión de Chrome para escanear páginas web y descargar archivos en masa, potenciada por IA.
 
-![FileHarvest](fileharvest.png)
+![FileHarvest](newIcon.png)
 
 ## Características
 

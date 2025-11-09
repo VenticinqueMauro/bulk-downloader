@@ -1,14 +1,14 @@
 
 import React from 'react';
-import { LogoIcon } from './icons';
+import newIcon from '../icons/newIcon-sinfondo.png';
 
 export const Header: React.FC = () => {
   return (
-    <header className="bg-gray-900/80 backdrop-blur-md border-b border-gray-700/50 sticky top-0 z-20 flex-shrink-0">
-      <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-12">
+    <header className="sticky top-0 z-20 flex-shrink-0 border-b backdrop-blur-md bg-gray-900/80 border-gray-700/50">
+      <div className="container px-4 mx-auto">
+        <div className="flex justify-between items-center h-12">
           <div className="flex items-center gap-2.5">
-            <LogoIcon className="h-6 w-6 text-sky-400" />
+            <img src={newIcon} alt="FileHarvest" className="w-10 h-10" />
             <h1 className="text-lg font-bold text-white">FileHarvest</h1>
           </div>
         </div>

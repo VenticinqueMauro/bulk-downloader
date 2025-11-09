@@ -3,7 +3,7 @@ import { readFileSync } from 'fs';
 import { join } from 'path';
 
 const sizes = [16, 32, 48, 128];
-const pngBuffer = readFileSync(join(process.cwd(), 'icons', 'fileharvest.png'));
+const pngBuffer = readFileSync(join(process.cwd(), 'icons', 'newIcon.png'));
 
 async function generateIcons() {
   console.log('🎨 Generating icons...\n');

@@ -54,7 +54,7 @@
 **Opción A - Fácil (Canva)**:
 1. Ve a https://www.canva.com/
 2. Crea diseño 440x280 px
-3. Usa el logo `fileharvest.png`
+3. Usa el logo `newIcon.png`
 4. Añade texto "FileHarvest"
 5. Descarga como PNG
 

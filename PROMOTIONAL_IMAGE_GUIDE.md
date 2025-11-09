@@ -49,7 +49,7 @@ La imagen promocional es la pequeña imagen que aparece en la Chrome Web Store j
 2. Crea un diseño personalizado de 440x280 píxeles
 3. Usa estos elementos:
    - Background oscuro (color: #1a1a2e)
-   - Sube el logo fileharvest.png
+   - Sube el logo newIcon.png
    - Añade texto "FileHarvest" (fuente: Montserrat Bold o similar)
    - Añade subtítulo (fuente: Montserrat Regular)
 4. Descarga como PNG de alta calidad
@@ -61,7 +61,7 @@ La imagen promocional es la pequeña imagen que aparece en la Chrome Web Store j
 3. Añade background:
    - Gradiente desde #1a1a2e (arriba) a #0f0f1e (abajo)
 4. Añade el logo:
-   - File > Open & Place... > Selecciona fileharvest.png
+   - File > Open & Place... > Selecciona newIcon.png
    - Redimensiona a ~120x120px
    - Centra horizontalmente
 5. Añade texto:
@@ -81,7 +81,7 @@ La imagen promocional es la pequeña imagen que aparece en la Chrome Web Store j
 # Pasos en GIMP:
 1. File > New Image > 440x280
 2. Filters > Render > Gradiente
-3. File > Open as Layer > fileharvest.png
+3. File > Open as Layer > newIcon.png
 4. Layer > Scale Layer
 5. Tools > Text
 6. File > Export As > promotional-440x280.png
@@ -131,7 +131,7 @@ La imagen promocional es la pequeña imagen que aparece en la Chrome Web Store j
 </head>
 <body>
   <div class="promo">
-    <img src="fileharvest.png" class="logo" alt="FileHarvest Logo">
+    <img src="newIcon.png" class="logo" alt="FileHarvest Logo">
     <h1 class="title">FileHarvest</h1>
     <p class="subtitle">Download Files from Any Webpage</p>
   </div>
