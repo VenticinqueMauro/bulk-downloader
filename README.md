@@ -246,10 +246,22 @@ bulk-downloader/
 
 Este proyecto es privado y de uso personal.
 
+## Apoyar el Proyecto
+
+FileHarvest es **100% gratuito** y sin publicidad. Si encuentras útil esta extensión y quieres apoyar su desarrollo continuo, considera hacer una donación voluntaria:
+
+### 🌍 Donación Internacional
+- **PayPal**: [Donar aquí](https://www.paypal.com/ncp/payment/6BYQBEU5X5B2A)
+
+### 🇦🇷 Para usuarios de Argentina
+- **Brubank**: Alias `mauro25qe`
+
+Tu apoyo ayuda a mantener el proyecto activo, libre de publicidad y en constante mejora. ¡Gracias!
+
 ## Soporte
 
 Para reportar bugs o solicitar funciones, contacta al desarrollador.
 
 ---
 
-**¿Te gusta esta extensión?** Considera dejar una reseña en Chrome Web Store.
+**¿Te gusta esta extensión?** Considera dejar una reseña en Chrome Web Store o hacer una donación para apoyar el desarrollo.

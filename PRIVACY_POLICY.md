@@ -18,6 +18,7 @@ Para ser completamente transparentes, **NO recopilamos, almacenamos ni compartim
 - URLs que escaneas
 - Archivos que descargas
 - Información de pago o facturación
+- Información sobre donaciones (son procesadas directamente por PayPal/servicios de pago)
 - Cookies o identificadores de seguimiento
 - Datos de ubicación
 - Información demográfica
@@ -231,6 +232,20 @@ Como usuario, eres responsable de:
 - No uses la extensión para piratería o violación de derechos de autor
 - Respeta las licencias de los archivos que descargas
 - El desarrollador no es responsable del uso indebido de la extensión
+
+## Donaciones Opcionales
+
+FileHarvest es completamente gratuito. La extensión incluye enlaces opcionales para donaciones voluntarias.
+
+**Importante:**
+- Las donaciones son **100% opcionales** y no afectan la funcionalidad de la extensión
+- Todas las transacciones de donación son procesadas directamente por servicios de pago de terceros (PayPal, bancos, etc.)
+- **No recopilamos ni tenemos acceso** a información de donaciones o datos de pago
+- No rastreamos quién dona o cuánto dona
+- Las donaciones no desbloquean funciones adicionales (la extensión es totalmente gratuita para todos)
+
+Los enlaces de donación te redirigen a servicios externos que tienen sus propias políticas de privacidad:
+- **PayPal**: [https://www.paypal.com/privacy](https://www.paypal.com/privacy)
 
 ## Contacto
 

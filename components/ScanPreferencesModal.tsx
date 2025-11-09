@@ -131,10 +131,11 @@ export const ScanPreferencesModal: React.FC<ScanPreferencesModalProps> = ({
       onClick={onClose}
     >
       <div
-        className="bg-gray-800 rounded-2xl shadow-2xl border border-gray-700 w-full max-w-3xl my-8 transform transition-all"
+        className="bg-gray-800 rounded-2xl shadow-2xl border border-gray-700 w-full max-w-3xl my-8 transform transition-all flex flex-col max-h-[90vh]"
         onClick={e => e.stopPropagation()}
       >
-        <div className="p-6 sm:p-8 max-h-[90vh] overflow-y-auto">
+        {/* Scrollable Content */}
+        <div className="p-6 sm:p-8 overflow-y-auto flex-1">
           {/* Header */}
           <div className="flex justify-between items-start mb-6">
             <div className="flex items-center gap-3">
@@ -250,7 +251,7 @@ export const ScanPreferencesModal: React.FC<ScanPreferencesModalProps> = ({
           </div>
 
           {/* Remember Preferences */}
-          <div className="mb-6">
+          <div className="mb-4">
             <label className="flex items-center gap-3 cursor-pointer">
               <input
                 type="checkbox"
@@ -263,22 +264,29 @@ export const ScanPreferencesModal: React.FC<ScanPreferencesModalProps> = ({
               </span>
             </label>
           </div>
+        </div>
 
-          {/* Action Buttons */}
-          <div className="flex gap-3">
-            <button
-              onClick={onClose}
-              className="flex-1 py-3 px-6 bg-gray-700 text-white font-medium rounded-lg hover:bg-gray-600 transition-colors"
-            >
-              Cancelar
-            </button>
-            <button
-              onClick={handleConfirm}
-              disabled={selectedCategories.length === 0}
-              className="flex-1 py-3 px-6 bg-sky-600 text-white font-bold rounded-lg hover:bg-sky-500 transition-all duration-300 transform hover:scale-105 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
-            >
-              Iniciar Scan
-            </button>
+        {/* Sticky Action Footer */}
+        <div className="sticky bottom-0 bg-gray-800/95 backdrop-blur-md border-t border-gray-700/50 p-4 sm:p-6 rounded-b-2xl">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div className="text-sm text-gray-400">
+              <span className="text-sky-400 font-bold">{selectedCategories.length}</span> categoría{selectedCategories.length !== 1 ? 's' : ''} seleccionada{selectedCategories.length !== 1 ? 's' : ''}
+            </div>
+            <div className="flex gap-3 w-full sm:w-auto">
+              <button
+                onClick={onClose}
+                className="flex-1 sm:flex-none py-3 px-6 bg-gray-700 text-white font-medium rounded-lg hover:bg-gray-600 transition-colors"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={handleConfirm}
+                disabled={selectedCategories.length === 0}
+                className="flex-1 sm:flex-none py-3 px-6 bg-sky-600 text-white font-bold rounded-lg hover:bg-sky-500 transition-all duration-300 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Iniciar Scan
+              </button>
+            </div>
           </div>
         </div>
       </div>

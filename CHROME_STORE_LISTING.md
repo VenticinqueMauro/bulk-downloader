@@ -59,7 +59,9 @@ Scan webpages and download files in bulk. Features filtering, real file sizes, a
 
 ### 🆓 Completely Free
 
-FileHarvest is completely free to use. The AI Deep Scan feature requires a Google AI API key, which you can get for free from Google AI Studio. Google offers a generous free tier that's sufficient for personal use.
+FileHarvest is completely free to use with no ads or subscriptions. The AI Deep Scan feature requires a Google AI API key, which you can get for free from Google AI Studio. Google offers a generous free tier that's sufficient for personal use.
+
+If you find FileHarvest useful and want to support its continued development, you can make an optional donation through the extension's interface. Your support helps keep the project active and ad-free!
 
 ### 🌐 Website & Support
 

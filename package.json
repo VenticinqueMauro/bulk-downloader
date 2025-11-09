@@ -29,12 +29,14 @@
     "typescript": "~5.8.2",
     "vite": "^6.2.0"
   },
-  "author": "",
+  "author": "Mauro Venticinque",
   "keywords": [
     "chrome-extension",
     "fileharvest",
     "bulk-download",
     "file-downloader",
-    "ai"
+    "ai",
+    "free",
+    "open-source"
   ]
 }

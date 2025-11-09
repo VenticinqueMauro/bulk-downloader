@@ -6,6 +6,7 @@ import { FilterBar } from './components/FilterBar';
 import { FileList } from './components/FileList';
 import { ActionBar } from './components/ActionBar';
 import { ScanPreferencesModal } from './components/ScanPreferencesModal';
+import { WelcomeMessage } from './components/WelcomeMessage';
 import { FileItem, FilterType, ScanPreferences, FileCategory } from './types';
 import { performStandardScan, scanUrlWithAI, ApiKeyMissingError } from './services/geminiService';
 import { SearchIcon } from './components/icons';
@@ -163,7 +164,7 @@ const App: React.FC = () => {
 
   return (
     <div className="bg-gray-900 text-white h-screen flex flex-col font-sans overflow-hidden">
-      <Header />
+      <Header onReset={handleClearResults} />
       <main className="container mx-auto px-4 flex-1 flex flex-col min-h-0">
         <UrlInputForm
           onStandardScan={handleStandardScan}
@@ -203,29 +204,36 @@ const App: React.FC = () => {
             />
           </div>
         ) : (
-          // Show "No results" message only if scan was performed and no files found
-          hasScanned && !isStandardLoading && !isAiLoading && (
-            <div className="flex flex-col items-center justify-center py-8 px-4 flex-1">
-              <div className="bg-gray-800 rounded-xl p-6 max-w-md w-full border border-gray-700 text-center">
-                <SearchIcon className="h-12 w-12 text-gray-600 mx-auto mb-3" />
-                <h3 className="text-lg font-bold text-gray-300 mb-2">
-                  No se encontraron archivos
-                </h3>
-                <p className="text-sm text-gray-500 mb-4">
-                  El scan no encontró archivos que coincidan con tus filtros en{' '}
-                  <span className="text-sky-400 font-mono text-xs break-all block mt-1">{lastScannedUrl}</span>
-                </p>
-                <div className="text-left text-xs text-gray-400 space-y-1.5 mt-4">
-                  <p className="font-semibold text-gray-300 text-sm">Sugerencias:</p>
-                  <ul className="list-disc list-inside space-y-1">
-                    <li>Verifica que la URL contenga archivos descargables</li>
-                    <li>Intenta con diferentes filtros de categorías o tamaño</li>
-                    <li>Usa el AI Scan para una búsqueda más profunda</li>
-                  </ul>
+          <>
+            {/* Show Welcome message when no scan has been performed yet */}
+            {!hasScanned && !isStandardLoading && !isAiLoading && (
+              <WelcomeMessage />
+            )}
+
+            {/* Show "No results" message only if scan was performed and no files found */}
+            {hasScanned && !isStandardLoading && !isAiLoading && (
+              <div className="flex flex-col items-center justify-center py-8 px-4 flex-1">
+                <div className="bg-gray-800 rounded-xl p-6 max-w-md w-full border border-gray-700 text-center">
+                  <SearchIcon className="h-12 w-12 text-gray-600 mx-auto mb-3" />
+                  <h3 className="text-lg font-bold text-gray-300 mb-2">
+                    No se encontraron archivos
+                  </h3>
+                  <p className="text-sm text-gray-500 mb-4">
+                    El scan no encontró archivos que coincidan con tus filtros en{' '}
+                    <span className="text-sky-400 font-mono text-xs break-all block mt-1">{lastScannedUrl}</span>
+                  </p>
+                  <div className="text-left text-xs text-gray-400 space-y-1.5 mt-4">
+                    <p className="font-semibold text-gray-300 text-sm">Sugerencias:</p>
+                    <ul className="list-disc list-inside space-y-1">
+                      <li>Verifica que la URL contenga archivos descargables</li>
+                      <li>Intenta con diferentes filtros de categorías o tamaño</li>
+                      <li>Usa el AI Scan para una búsqueda más profunda</li>
+                    </ul>
+                  </div>
                 </div>
               </div>
-            </div>
-          )
+            )}
+          </>
         )}
       </main>
 
