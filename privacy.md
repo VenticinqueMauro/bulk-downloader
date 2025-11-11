@@ -251,7 +251,7 @@ Donation links redirect you to external services that have their own privacy pol
 
 If you have questions, concerns, or requests related to this Privacy Policy:
 
-- **Email:** support@m25.com.ar
+- **Email:** mauro25qe@gmail.com
 - **Website:** https://www.m25.com.ar
 - **GitHub:** https://github.com/VenticinqueMauro/bulk-downloader
 
