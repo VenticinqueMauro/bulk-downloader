@@ -39,6 +39,7 @@ lerna-debug.log*
 # Chrome extension development
 *.pem
 *.crx
+*.zip
 .web-extension-id
 
 # OS files
