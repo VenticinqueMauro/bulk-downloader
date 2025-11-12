@@ -90,14 +90,17 @@ AI Deep Scan requires a free API key:
 
 ## File Types Supported
 
-The extension can detect and download:
+The extension can detect and download files across 13+ categories with 200+ file format support:
 
-- 🖼️ **Images** - JPG, PNG, GIF, SVG, WebP
-- 🎥 **Videos** - MP4, WebM, AVI, MOV
-- 🎵 **Audio** - MP3, WAV, OGG
-- 📄 **Documents** - PDF, DOC, DOCX, TXT
-- 📦 **Archives** - ZIP, RAR, 7Z, TAR
-- 💾 **Other** - Any other downloadable file
+- 🖼️ **Images** - Common formats including JPEG, PNG, GIF, and more
+- 🎥 **Videos** - Popular video formats like MP4, WebM, and others
+- 🎵 **Audio** - Music and audio files in various formats
+- 📄 **Documents** - PDF files, office documents, spreadsheets, and presentations
+- 📦 **Archives** - Compressed files and archives
+- 💻 **Code & Scripts** - Source code files, stylesheets, and scripts
+- 🎨 **Fonts & 3D Models** - Font files and 3D model formats
+- 📊 **Data Files** - JSON, XML, databases, and more
+- 💾 **Other** - Executables and many other file types
 
 ## FAQ
 

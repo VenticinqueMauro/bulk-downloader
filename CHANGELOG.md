@@ -2,6 +2,38 @@
 
 All notable changes to the Gemini Bulk File Downloader project.
 
+## [1.0.1] - 2025-11-12
+
+### 🔧 Chrome Web Store Compliance
+
+#### Documentation Updates
+- **CHROME_STORE_LISTING.md**: Removed keyword spam from file types section
+  - Changed from listing all extensions (PDF, DOC, DOCX, XLS, etc.) to descriptive text
+  - Now complies with Chrome Web Store metadata policies
+- **README_USER.md**: Updated file types section to match store listing format
+  - Added comprehensive category descriptions
+  - Mentioned 200+ file format support
+
+#### Cleanup
+- **Removed unnecessary documentation files**:
+  - `NEXT_STEPS.md` - Outdated task list
+  - `SEO_CHECKLIST.md` - Completed SEO tasks
+  - `SCREENSHOT_SEO_GUIDE.md` - Completed screenshot guide
+  - `SCREENSHOT_GUIDE.md` - Completed screenshot guide
+  - `PROMOTIONAL_IMAGE_GUIDE.md` - Completed promotional guide
+  - `PUBLICATION_CHECKLIST.md` - Completed publication checklist
+  - `privacy.md` - Duplicate of PRIVACY_POLICY.md
+
+#### Technical Details
+- **Description Accuracy**: Verified that file type descriptions match actual code implementation in `geminiService.ts`
+- **File Format Support**: Confirmed support for 200+ extensions across 13 categories
+- **Version Bump**: Updated manifest.json (both root and dist) to version 1.0.1
+
+### 📝 Notes
+- Ready for Chrome Web Store resubmission
+- All changes address Chrome Web Store rejection (Reference ID: Yellow Argon)
+- Description now uses general, descriptive terms instead of exhaustive lists
+
 ## [1.0.0] - 2025-11-08
 
 ### ✨ Implemented Features

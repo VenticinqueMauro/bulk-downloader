@@ -8,7 +8,9 @@
       "Bash(copy:*)",
       "Bash(npm run generate-icons:*)",
       "Bash(npm run clean:*)",
-      "Bash(powershell -Command:*)"
+      "Bash(powershell -Command:*)",
+      "Bash(findstr:*)",
+      "Bash(dir /b \"D:\\MIS DATOS\\Desktop\\FREELANCE\\bulk-downloader\\*.md\")"
     ],
     "deny": [],
     "ask": []

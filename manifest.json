@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "FileHarvest - Bulk File Downloader",
   "description": "Download files in bulk from any webpage. AI-powered scanning, advanced filters, real sizes. 100% free, no ads, no tracking.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": "Mauro Venticinque",
   "homepage_url": "https://www.m25.com.ar/",
   "icons": {

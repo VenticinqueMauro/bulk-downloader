@@ -36,11 +36,11 @@ Download files in bulk from any webpage. AI-powered scanning, advanced filters, 
 
 ### 📁 Supported File Types
 
-- **Images**: JPG, PNG, GIF, WebP, SVG, BMP, ICO
-- **Videos**: MP4, WebM, AVI, MOV, MKV, FLV
-- **Audio**: MP3, WAV, OGG, M4A, FLAC, AAC
-- **Documents**: PDF, DOC, DOCX, XLS, XLSX, PPT, TXT
-- **Archives**: ZIP, RAR, 7Z, TAR, GZ
+- **Images**: Common formats including JPEG, PNG, GIF, and more
+- **Videos**: Popular video formats like MP4, WebM, and others
+- **Audio**: Music and audio files in various formats
+- **Documents**: PDF files, office documents, spreadsheets, and presentations
+- **Archives**: Compressed files and archives
 - And many more...
 
 ### 🔒 Privacy & Security
