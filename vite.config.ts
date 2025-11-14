@@ -19,10 +19,26 @@ export default defineConfig(({ mode }) => {
           output: {
             entryFileNames: '[name].js',
             chunkFileNames: 'chunks/[name]-[hash].js',
-            assetFileNames: 'assets/[name]-[hash].[ext]'
+            assetFileNames: 'assets/[name]-[hash].[ext]',
+            manualChunks: {
+              // Separate React into its own chunk
+              'react-vendor': ['react', 'react-dom'],
+              // Separate Google Generative AI into its own chunk (loaded only when needed)
+              'ai-vendor': ['@google/genai'],
+            }
           }
         },
         outDir: 'dist',
+        // Enable minification and tree shaking
+        minify: 'terser',
+        terserOptions: {
+          compress: {
+            drop_console: true, // Remove console.log in production
+            drop_debugger: true,
+          },
+        },
+        // Optimize chunk size warnings
+        chunkSizeWarningLimit: 500,
       },
       define: {
         'import.meta.env.VITE_PROXY_URL': JSON.stringify(env.VITE_PROXY_URL || ''),

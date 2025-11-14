@@ -1,15 +1,18 @@
 
-import React, { useState, useMemo, useCallback, useEffect } from 'react';
+import React, { useState, useMemo, useCallback, useEffect, lazy, Suspense } from 'react';
 import { Header } from './components/Header';
 import { UrlInputForm } from './components/UrlInputForm';
 import { FilterBar } from './components/FilterBar';
 import { FileList } from './components/FileList';
 import { ActionBar } from './components/ActionBar';
-import { ScanPreferencesModal } from './components/ScanPreferencesModal';
 import { WelcomeMessage } from './components/WelcomeMessage';
+import { Onboarding } from './components/Onboarding';
 import { FileItem, FilterType, ScanPreferences, FileCategory } from './types';
 import { performStandardScan, scanUrlWithAI, ApiKeyMissingError } from './services/geminiService';
 import { SearchIcon } from './components/icons';
+
+// Lazy load heavy components
+const ScanPreferencesModal = lazy(() => import('./components/ScanPreferencesModal').then(m => ({ default: m.ScanPreferencesModal })));
 
 // Default preferences: All categories, no size limits, don't remember
 const DEFAULT_PREFERENCES: ScanPreferences = {
@@ -35,11 +38,18 @@ const App: React.FC = () => {
   const [pendingScanUrl, setPendingScanUrl] = useState<string>('');
   const [pendingScanType, setPendingScanType] = useState<'standard' | 'ai' | null>(null);
 
-  // Load saved preferences on mount
+  // Onboarding state
+  const [showOnboarding, setShowOnboarding] = useState(false);
+
+  // Load saved preferences and check onboarding status on mount
   useEffect(() => {
-    chrome.storage.sync.get(['scanPreferences'], (result) => {
+    chrome.storage.sync.get(['scanPreferences', 'hasSeenOnboarding'], (result) => {
       if (result.scanPreferences) {
         setScanPreferences(result.scanPreferences);
+      }
+      // Show onboarding if user hasn't seen it yet
+      if (!result.hasSeenOnboarding) {
+        setShowOnboarding(true);
       }
     });
   }, []);
@@ -100,7 +110,7 @@ const App: React.FC = () => {
       setHasScanned(true); // Mark that a scan has been performed
     } catch (e: any) {
       console.error(e);
-      setError(e.message || 'Standard Scan failed. Please try again.');
+      setError(e.message || 'El escaneo estándar falló. Por favor intenta de nuevo.');
       setHasScanned(true); // Still mark as scanned even on error
     } finally {
       setIsStandardLoading(false);
@@ -121,9 +131,9 @@ const App: React.FC = () => {
     } catch (e: any) {
       console.error(e);
       if (e instanceof ApiKeyMissingError) {
-        setError('AI key is not configured. Click here to open settings and add your AI API key.');
+        setError('La clave de IA no está configurada. Haz clic aquí para abrir la configuración y agregar tu clave API de IA.');
       } else {
-        setError(e.message || 'AI Scan failed. Please check the console for details.');
+        setError(e.message || 'El escaneo con IA falló. Por favor verifica la consola para más detalles.');
       }
       setHasScanned(true); // Still mark as scanned even on error
     } finally {
@@ -163,9 +173,9 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="bg-gray-900 text-white h-screen flex flex-col font-sans overflow-hidden">
+    <div className="bg-gray-900 text-white h-screen flex flex-col font-sans overflow-x-hidden overflow-y-auto">
       <Header onReset={handleClearResults} />
-      <main className="container mx-auto px-4 flex-1 flex flex-col min-h-0">
+      <main className="w-full px-4 flex-1 flex flex-col min-h-0 overflow-x-hidden">
         <UrlInputForm
           onStandardScan={handleStandardScan}
           onAiScan={handleAiScan}
@@ -177,13 +187,13 @@ const App: React.FC = () => {
         {error && (
             <div className="mb-3 p-3 bg-rose-900/50 border border-rose-700 text-rose-300 rounded-lg flex-shrink-0">
                 <p className="text-center text-sm mb-2">{error}</p>
-                {error.includes('API key') && (
+                {error.includes('clave') && (
                   <div className="text-center">
                     <button
                       onClick={handleOpenOptions}
                       className="px-4 py-2 bg-purple-600 hover:bg-purple-700 rounded-lg text-sm font-medium transition-colors"
                     >
-                      Open Settings
+                      Abrir Configuración
                     </button>
                   </div>
                 )}
@@ -244,13 +254,20 @@ const App: React.FC = () => {
         />
       )}
 
+      {/* Onboarding */}
+      {showOnboarding && (
+        <Onboarding onComplete={() => setShowOnboarding(false)} />
+      )}
+
       {/* Scan Preferences Modal */}
-      <ScanPreferencesModal
-        isOpen={isPreferencesModalOpen}
-        onClose={() => setIsPreferencesModalOpen(false)}
-        onConfirm={handlePreferencesConfirm}
-        initialPreferences={scanPreferences}
-      />
+      <Suspense fallback={null}>
+        <ScanPreferencesModal
+          isOpen={isPreferencesModalOpen}
+          onClose={() => setIsPreferencesModalOpen(false)}
+          onConfirm={handlePreferencesConfirm}
+          initialPreferences={scanPreferences}
+        />
+      </Suspense>
     </div>
   );
 };

@@ -3,7 +3,9 @@ import { readFileSync } from 'fs';
 import { join } from 'path';
 
 const sizes = [16, 32, 48, 128];
-const pngBuffer = readFileSync(join(process.cwd(), 'icons', 'newIcon.png'));
+// Using icon.svg as source would be better, but for now we'll keep the existing generated icons
+// If you need to regenerate icons, you'll need to restore newIcon.png from git or use icon.svg
+const pngBuffer = readFileSync(join(process.cwd(), 'icons', 'icon128.png'));
 
 async function generateIcons() {
   console.log('🎨 Generating icons...\n');

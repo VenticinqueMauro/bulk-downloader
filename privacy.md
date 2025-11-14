@@ -1,275 +1,275 @@
-# Privacy Policy - FileHarvest
+# Política de Privacidad - FileHarvest
 
-**Last Updated:** November 2025
+**Última Actualización:** Noviembre 2025
 
-## Introduction
+## Introducción
 
-This Privacy Policy describes how **FileHarvest** ("the Extension", "we", "our") collects, uses, and protects information when you use our Chrome extension.
+Esta Política de Privacidad describe cómo **FileHarvest** ("la Extensión", "nosotros", "nuestro") recopila, usa y protege la información cuando usas nuestra extensión de Chrome.
 
-Your privacy is important to us. This extension has been designed with privacy in mind, minimizing data collection and keeping your information secure.
+Tu privacidad es importante para nosotros. Esta extensión ha sido diseñada con la privacidad en mente, minimizando la recopilación de datos y manteniendo tu información segura.
 
-## Information We DO NOT Collect
+## Información que NO Recopilamos
 
-To be completely transparent, we **DO NOT collect, store, or share**:
+Para ser completamente transparentes, **NO recopilamos, almacenamos ni compartimos**:
 
-- Personally identifiable information (name, address, phone, etc.)
-- Email addresses
-- Browsing history
-- URLs you scan
-- Files you download
-- Payment or billing information
-- Donation information (processed directly by PayPal/payment services)
-- Cookies or tracking identifiers
-- Location data
-- Demographic information
+- Información de identificación personal (nombre, dirección, teléfono, etc.)
+- Direcciones de correo electrónico
+- Historial de navegación
+- URLs que escaneas
+- Archivos que descargas
+- Información de pago o facturación
+- Información de donaciones (procesada directamente por PayPal/servicios de pago)
+- Cookies o identificadores de rastreo
+- Datos de ubicación
+- Información demográfica
 
-## Information We Store Locally
+## Información que Almacenamos Localmente
 
-The extension stores the following information **only in your browser** using the `chrome.storage.sync` API:
+La extensión almacena la siguiente información **solo en tu navegador** usando la API `chrome.storage.sync`:
 
-### 1. AI API Key
-- **What it is:** The API key you obtain from Google AI Studio to use the AI Deep Scan feature
-- **Where it's stored:** In your local browser via `chrome.storage.sync`
-- **Who has access:** Only you, through your Chrome browser
-- **Synchronization:** If you have Chrome sync enabled, this key will sync across your devices using Google's secure infrastructure
-- **Control:** You can delete it at any time from the extension's Options page
+### 1. Clave API de IA
+- **Qué es:** La clave API que obtienes de Google AI Studio para usar la función AI Deep Scan
+- **Dónde se almacena:** En tu navegador local vía `chrome.storage.sync`
+- **Quién tiene acceso:** Solo tú, a través de tu navegador Chrome
+- **Sincronización:** Si tienes la sincronización de Chrome habilitada, esta clave se sincronizará en tus dispositivos usando la infraestructura segura de Google
+- **Control:** Puedes eliminarla en cualquier momento desde la página de Opciones de la extensión
 
-### 2. User Status
-- **What it is:** Information about your status (free or Pro user) and number of remaining AI scans
-- **Where it's stored:** In browser memory during your session
-- **Persistence:** Resets when you close and reopen the extension
+### 2. Estado del Usuario
+- **Qué es:** Información sobre tu estado (usuario gratuito o Pro) y número de escaneos de IA restantes
+- **Dónde se almacena:** En la memoria del navegador durante tu sesión
+- **Persistencia:** Se reinicia cuando cierras y vuelves a abrir la extensión
 
-## How We Use the CORS Proxy
+## Cómo Usamos el Proxy CORS
 
-To avoid browser security restrictions (CORS), the extension uses a proxy service deployed on Vercel:
+Para evitar restricciones de seguridad del navegador (CORS), la extensión usa un servicio proxy desplegado en Vercel:
 
-### What does the proxy do?
-- Acts as an intermediary to fetch HTML content from pages you want to scan
-- Receives the URL you request to scan
-- Downloads the content from that URL
-- Returns the content to the extension
+### ¿Qué hace el proxy?
+- Actúa como intermediario para obtener contenido HTML de páginas que quieres escanear
+- Recibe la URL que solicitas escanear
+- Descarga el contenido de esa URL
+- Devuelve el contenido a la extensión
 
-### What does the proxy NOT do?
-- Does NOT log the URLs you scan
-- Does NOT store downloaded content
-- Does NOT collect personal information
-- Does NOT share data with third parties
+### ¿Qué NO hace el proxy?
+- NO registra las URLs que escaneas
+- NO almacena contenido descargado
+- NO recopila información personal
+- NO comparte datos con terceros
 
-### Proxy Security Measures
-- **Rate Limiting:** Maximum 30 requests per minute per IP address (to prevent abuse)
-- **SSRF Protection:** Blocks access to localhost and private networks
-- **Timeout:** Maximum 15 seconds per request
-- **Size Limit:** Maximum 5MB per response
-- **No Logs:** Requests are not logged after processing
+### Medidas de Seguridad del Proxy
+- **Limitación de Tasa:** Máximo 30 solicitudes por minuto por dirección IP (para prevenir abuso)
+- **Protección SSRF:** Bloquea acceso a localhost y redes privadas
+- **Tiempo de Espera:** Máximo 15 segundos por solicitud
+- **Límite de Tamaño:** Máximo 5MB por respuesta
+- **Sin Registros:** Las solicitudes no se registran después del procesamiento
 
-## Use of Third-Party APIs
+## Uso de APIs de Terceros
 
-### Google Gemini API
+### API de Google Gemini
 
-When you use the **AI Deep Scan** feature, the extension sends the HTML content of the page to Google's Gemini API for analysis.
+Cuando usas la función **AI Deep Scan**, la extensión envía el contenido HTML de la página a la API Gemini de Google para análisis.
 
-**What is sent to Gemini:**
-- The HTML content of the page you're scanning
-- A prompt asking what downloadable files are present
+**Qué se envía a Gemini:**
+- El contenido HTML de la página que estás escaneando
+- Un prompt preguntando qué archivos descargables están presentes
 
-**What is NOT sent:**
-- Your personal information
-- Browsing history
-- Data unrelated to the current scan
+**Qué NO se envía:**
+- Tu información personal
+- Historial de navegación
+- Datos no relacionados con el escaneo actual
 
-**Gemini Privacy:**
-- Use of the Gemini API is subject to [Google's Privacy Policy](https://policies.google.com/privacy)
-- You use your own API Key, so any usage is recorded in your Google Cloud account
-- Google may process data according to their AI policies
+**Privacidad de Gemini:**
+- El uso de la API Gemini está sujeto a la [Política de Privacidad de Google](https://policies.google.com/privacy)
+- Usas tu propia clave API, por lo que cualquier uso se registra en tu cuenta de Google Cloud
+- Google puede procesar datos según sus políticas de IA
 
-### Chrome APIs
+### APIs de Chrome
 
-The extension uses the following Chrome APIs:
+La extensión usa las siguientes APIs de Chrome:
 
-- **chrome.storage.sync:** To securely store your API Key
-- **chrome.downloads:** To initiate file downloads
-- **chrome.tabs:** To get the current tab's URL
-- **chrome.runtime:** For internal extension management
+- **chrome.storage.sync:** Para almacenar de forma segura tu clave API
+- **chrome.downloads:** Para iniciar descargas de archivos
+- **chrome.tabs:** Para obtener la URL de la pestaña actual
+- **chrome.runtime:** Para gestión interna de la extensión
 
-These APIs are provided by Google Chrome and are subject to [Chrome's Privacy Policy](https://www.google.com/chrome/privacy/).
+Estas APIs son proporcionadas por Google Chrome y están sujetas a la [Política de Privacidad de Chrome](https://www.google.com/chrome/privacy/).
 
-## Extension Permissions
+## Permisos de la Extensión
 
-The extension requests the following Chrome permissions:
+La extensión solicita los siguientes permisos de Chrome:
 
 ### 1. `downloads`
-- **Purpose:** Allow the extension to initiate file downloads
-- **Usage:** Only when you click "Download Selected"
-- **No access to:** Previous download history
+- **Propósito:** Permitir que la extensión inicie descargas de archivos
+- **Uso:** Solo cuando haces clic en "Descargar Selección"
+- **Sin acceso a:** Historial de descargas previas
 
 ### 2. `storage`
-- **Purpose:** Securely store your API Key
-- **Usage:** Save and retrieve your settings
-- **No access to:** Data from other extensions or websites
+- **Propósito:** Almacenar de forma segura tu clave API
+- **Uso:** Guardar y recuperar tu configuración
+- **Sin acceso a:** Datos de otras extensiones o sitios web
 
 ### 3. `activeTab`
-- **Purpose:** Read the URL of the current tab
-- **Usage:** Auto-fill the URL field when you open the extension
-- **No access to:** Page content or browsing history
+- **Propósito:** Leer la URL de la pestaña actual
+- **Uso:** Auto-rellenar el campo de URL cuando abres la extensión
+- **Sin acceso a:** Contenido de la página o historial de navegación
 
 ### 4. `tabs`
-- **Purpose:** Get basic information about the current tab
-- **Usage:** Detect the current URL for scanning
-- **No access to:** Sensitive content or history
+- **Propósito:** Obtener información básica sobre la pestaña actual
+- **Uso:** Detectar la URL actual para escanear
+- **Sin acceso a:** Contenido sensible o historial
 
-### 5. `<all_urls>` (Host Permissions)
-- **Purpose:** Allow downloads from any website
-- **Usage:** Necessary for Chrome to permit downloading files from arbitrary URLs
-- **No access to:** Data from pages you're not actively scanning
+### 5. `<all_urls>` (Permisos de Host)
+- **Propósito:** Permitir descargas desde cualquier sitio web
+- **Uso:** Necesario para que Chrome permita descargar archivos desde URLs arbitrarias
+- **Sin acceso a:** Datos de páginas que no estás escaneando activamente
 
-## Data Security
+## Seguridad de Datos
 
-### Local Storage
-- All your information is stored locally in your browser
-- We use `chrome.storage.sync` which is encrypted by Chrome
-- We don't have access to your stored data
+### Almacenamiento Local
+- Toda tu información se almacena localmente en tu navegador
+- Usamos `chrome.storage.sync` que está cifrado por Chrome
+- No tenemos acceso a tus datos almacenados
 
-### Data Transmission
-- Communications with the proxy use HTTPS
-- Communications with Gemini API use HTTPS
-- No unencrypted data is transmitted
+### Transmisión de Datos
+- Las comunicaciones con el proxy usan HTTPS
+- Las comunicaciones con la API Gemini usan HTTPS
+- No se transmiten datos sin cifrar
 
-### No Proprietary Servers
-- We don't operate servers that store user data
-- The Vercel proxy is stateless and doesn't save information
+### Sin Servidores Propietarios
+- No operamos servidores que almacenen datos de usuarios
+- El proxy de Vercel es sin estado y no guarda información
 
-## User Rights
+## Derechos del Usuario
 
-You have the right to:
+Tienes derecho a:
 
-### 1. Access Your Data
-- You can view your stored API Key in the Options page
-- All information is in your local browser
+### 1. Acceder a Tus Datos
+- Puedes ver tu clave API almacenada en la página de Opciones
+- Toda la información está en tu navegador local
 
-### 2. Delete Your Data
-- **Delete API Key:**
-  - Go to the Options page
-  - Click "Clear API Key"
+### 2. Eliminar Tus Datos
+- **Eliminar Clave API:**
+  - Ve a la página de Opciones
+  - Haz clic en "Eliminar Clave API"
 
-- **Complete Uninstall:**
-  - Go to `chrome://extensions/`
-  - Click "Remove" on FileHarvest
-  - Confirm removal
-  - All local data will be automatically deleted
+- **Desinstalación Completa:**
+  - Ve a `chrome://extensions/`
+  - Haz clic en "Eliminar" en FileHarvest
+  - Confirma la eliminación
+  - Todos los datos locales se eliminarán automáticamente
 
-### 3. Data Portability
-- You can copy your API Key from the Options page
-- There is no other data to export
+### 3. Portabilidad de Datos
+- Puedes copiar tu clave API desde la página de Opciones
+- No hay otros datos para exportar
 
-### 4. Not Be Tracked
-- This extension DOES NOT track you
-- We DON'T use analytics or user tracking
-- We DON'T place third-party cookies
+### 4. No Ser Rastreado
+- Esta extensión NO te rastrea
+- NO usamos análisis o rastreo de usuarios
+- NO colocamos cookies de terceros
 
-## Changes to This Policy
+## Cambios a Esta Política
 
-We may update this Privacy Policy occasionally. Changes will be reflected with a new "Last Updated" date at the top.
+Podemos actualizar esta Política de Privacidad ocasionalmente. Los cambios se reflejarán con una nueva fecha de "Última Actualización" en la parte superior.
 
-**We will notify you of significant changes:**
-- Through an update to the extension on Chrome Web Store
-- Including a notice in the version notes
+**Te notificaremos de cambios significativos:**
+- A través de una actualización de la extensión en Chrome Web Store
+- Incluyendo un aviso en las notas de la versión
 
-**Your continued use of the extension after changes constitutes acceptance of the new policy.**
+**Tu uso continuado de la extensión después de los cambios constituye aceptación de la nueva política.**
 
-## Legal Compliance
+## Cumplimiento Legal
 
-### GDPR (General Data Protection Regulation)
-If you are in the European Union:
-- We don't collect personal data, so most of GDPR doesn't apply
-- Your API Key is stored locally under your control
-- We don't share data with third parties (except Google Gemini, using your own key)
+### GDPR (Reglamento General de Protección de Datos)
+Si estás en la Unión Europea:
+- No recopilamos datos personales, por lo que la mayoría del GDPR no aplica
+- Tu clave API se almacena localmente bajo tu control
+- No compartimos datos con terceros (excepto Google Gemini, usando tu propia clave)
 
-### CCPA (California Consumer Privacy Act)
-If you are in California:
-- We don't sell personal information
-- We don't share personal information for commercial purposes
-- We don't collect personally identifiable information
+### CCPA (Ley de Privacidad del Consumidor de California)
+Si estás en California:
+- No vendemos información personal
+- No compartimos información personal con fines comerciales
+- No recopilamos información de identificación personal
 
-### COPPA (Children's Online Privacy Protection Act)
-- This extension is not directed at children under 13
-- We don't intentionally collect information from minors
-- If you're a parent and believe your child has provided information, contact us
+### COPPA (Ley de Protección de la Privacidad en Línea de los Niños)
+- Esta extensión no está dirigida a niños menores de 13 años
+- No recopilamos intencionalmente información de menores
+- Si eres padre y crees que tu hijo ha proporcionado información, contáctanos
 
-## Third-Party Services
+## Servicios de Terceros
 
-This extension interacts with the following third-party services:
+Esta extensión interactúa con los siguientes servicios de terceros:
 
-### 1. Google Gemini API
-- **Privacy Policy:** [https://policies.google.com/privacy](https://policies.google.com/privacy)
-- **Usage:** AI-powered web content analysis
-- **Your control:** You use your own API Key
+### 1. API de Google Gemini
+- **Política de Privacidad:** [https://policies.google.com/privacy](https://policies.google.com/privacy)
+- **Uso:** Análisis de contenido web con IA
+- **Tu control:** Usas tu propia clave API
 
-### 2. Vercel (CORS Proxy)
-- **Privacy Policy:** [https://vercel.com/legal/privacy-policy](https://vercel.com/legal/privacy-policy)
-- **Usage:** Proxy service hosting
-- **Data processed:** Requested URLs (not stored)
+### 2. Vercel (Proxy CORS)
+- **Política de Privacidad:** [https://vercel.com/legal/privacy-policy](https://vercel.com/legal/privacy-policy)
+- **Uso:** Alojamiento del servicio proxy
+- **Datos procesados:** URLs solicitadas (no almacenadas)
 
 ### 3. Chrome Web Store
-- **Privacy Policy:** [https://policies.google.com/privacy](https://policies.google.com/privacy)
-- **Usage:** Extension distribution
-- **Data:** Installation/update information managed by Google
+- **Política de Privacidad:** [https://policies.google.com/privacy](https://policies.google.com/privacy)
+- **Uso:** Distribución de la extensión
+- **Datos:** Información de instalación/actualización gestionada por Google
 
-## User Responsibility
+## Responsabilidad del Usuario
 
-As a user, you are responsible for:
+Como usuario, eres responsable de:
 
-### 1. Protecting Your API Key
-- Don't share your Gemini API Key with anyone
-- Keep it secure
-- Revoke and generate a new one if you believe it was compromised
+### 1. Proteger Tu Clave API
+- No compartas tu clave API de Gemini con nadie
+- Mantenla segura
+- Revócala y genera una nueva si crees que fue comprometida
 
-### 2. Legal Use
-- Only scan web pages you have the right to access
-- Only download files you have the right to download
-- Comply with the terms of service of websites you visit
+### 2. Uso Legal
+- Solo escanea páginas web a las que tienes derecho de acceder
+- Solo descarga archivos que tienes derecho a descargar
+- Cumple con los términos de servicio de los sitios web que visitas
 
-### 3. Respect for Copyright
-- Don't use the extension for piracy or copyright infringement
-- Respect the licenses of files you download
-- The developer is not responsible for misuse of the extension
+### 3. Respeto por los Derechos de Autor
+- No uses la extensión para piratería o infracción de derechos de autor
+- Respeta las licencias de los archivos que descargas
+- El desarrollador no es responsable del mal uso de la extensión
 
-## Optional Donations
+## Donaciones Opcionales
 
-FileHarvest is completely free. The extension includes optional links for voluntary donations.
+FileHarvest es completamente gratuito. La extensión incluye enlaces opcionales para donaciones voluntarias.
 
-**Important:**
-- Donations are **100% optional** and don't affect extension functionality
-- All donation transactions are processed directly by third-party payment services (PayPal, banks, etc.)
-- We **don't collect or have access** to donation information or payment data
-- We don't track who donates or how much they donate
-- Donations don't unlock additional features (the extension is completely free for everyone)
+**Importante:**
+- Las donaciones son **100% opcionales** y no afectan la funcionalidad de la extensión
+- Todas las transacciones de donación son procesadas directamente por servicios de pago de terceros (PayPal, bancos, etc.)
+- **No recopilamos ni tenemos acceso** a información de donaciones o datos de pago
+- No rastreamos quién dona o cuánto dona
+- Las donaciones no desbloquean funciones adicionales (la extensión es completamente gratuita para todos)
 
-Donation links redirect you to external services that have their own privacy policies:
+Los enlaces de donación te redirigen a servicios externos que tienen sus propias políticas de privacidad:
 - **PayPal**: [https://www.paypal.com/privacy](https://www.paypal.com/privacy)
 
-## Contact
+## Contacto
 
-If you have questions, concerns, or requests related to this Privacy Policy:
+Si tienes preguntas, inquietudes o solicitudes relacionadas con esta Política de Privacidad:
 
 - **Email:** mauro25qe@gmail.com
-- **Website:** https://www.m25.com.ar
+- **Sitio Web:** https://www.m25.com.ar
 - **GitHub:** https://github.com/VenticinqueMauro/bulk-downloader
 
-## Transparency
+## Transparencia
 
-This extension is **open source**. You can:
-- Review the source code to verify our claims
-- Audit security and privacy
-- Report issues or vulnerabilities
+Esta extensión es **código abierto**. Puedes:
+- Revisar el código fuente para verificar nuestras afirmaciones
+- Auditar seguridad y privacidad
+- Reportar problemas o vulnerabilidades
 
-## Consent
+## Consentimiento
 
-By installing and using **FileHarvest**, you accept this Privacy Policy.
+Al instalar y usar **FileHarvest**, aceptas esta Política de Privacidad.
 
-If you don't agree with this policy, please don't use the extension.
+Si no estás de acuerdo con esta política, por favor no uses la extensión.
 
 ---
 
-**This policy was designed to be clear, honest, and transparent. Your privacy is our priority.**
+**Esta política fue diseñada para ser clara, honesta y transparente. Tu privacidad es nuestra prioridad.**
 
-Last updated: November 2025
+Última actualización: Noviembre 2025

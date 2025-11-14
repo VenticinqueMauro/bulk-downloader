@@ -1,6 +1,6 @@
 
 import React from 'react';
-import newIcon from '../icons/newIcon-sinfondo.png';
+import newIcon from '../icons/icon128.png';
 import { DonationButton } from './DonationButton';
 
 interface HeaderProps {
@@ -9,8 +9,8 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({ onReset }) => {
   return (
-    <header className="sticky top-0 z-20 flex-shrink-0 border-b backdrop-blur-md bg-gray-900/80 border-gray-700/50">
-      <div className="container px-4 mx-auto">
+    <header className="sticky top-0 z-20 flex-shrink-0 border-b backdrop-blur-md bg-gray-900/80 border-gray-700/50 w-full">
+      <div className="w-full px-4">
         <div className="flex justify-between items-center h-12">
           <button
             onClick={onReset}

@@ -59,7 +59,7 @@ export const FileList: React.FC<FileListProps> = ({ files, selectedFileUrls, onS
         <div className="relative">
           <input
             type="text"
-            placeholder="Search files by name, URL, or type..."
+            placeholder="Buscar archivos por nombre, URL o tipo..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full px-3 py-1.5 pl-8 text-sm bg-gray-700/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
@@ -85,7 +85,7 @@ export const FileList: React.FC<FileListProps> = ({ files, selectedFileUrls, onS
         </div>
         {searchQuery && (
           <div className="mt-1.5 text-xs text-gray-400">
-            Found {filteredFiles.length} of {files.length} files
+            Encontrados {filteredFiles.length} de {files.length} archivos
           </div>
         )}
       </div>
@@ -98,13 +98,13 @@ export const FileList: React.FC<FileListProps> = ({ files, selectedFileUrls, onS
             checked={isAllSelected}
             onChange={handleTogglePageSelect}
             className="h-4 w-4 rounded bg-gray-700 border-gray-500 text-sky-500 focus:ring-sky-500 cursor-pointer"
-            title="Select all on this page"
+            title="Seleccionar todos en esta página"
           />
         </div>
         <div className="flex-1 flex items-center gap-4 min-w-0">
-            <div className="flex-1 min-w-0">File Name</div>
-            <div className="w-20 text-right flex-shrink-0">Size</div>
-            <div className="w-24 text-center flex-shrink-0">Type</div>
+            <div className="flex-1 min-w-0">Nombre del Archivo</div>
+            <div className="w-20 text-right flex-shrink-0">Tamaño</div>
+            <div className="w-24 text-center flex-shrink-0">Tipo</div>
             <div className="w-10 flex-shrink-0 hidden md:block"></div>
         </div>
       </div>
@@ -113,7 +113,7 @@ export const FileList: React.FC<FileListProps> = ({ files, selectedFileUrls, onS
       <div className="flex-grow min-h-0 overflow-y-auto">
         {paginatedFiles.length === 0 ? (
           <div className="flex items-center justify-center h-full text-gray-500">
-            {searchQuery ? 'No files match your search.' : 'No files match the current filter.'}
+            {searchQuery ? 'No hay archivos que coincidan con tu búsqueda.' : 'No hay archivos que coincidan con el filtro actual.'}
           </div>
         ) : (
           paginatedFiles.map(file => (
@@ -139,7 +139,7 @@ export const FileList: React.FC<FileListProps> = ({ files, selectedFileUrls, onS
       {totalPages > 1 && (
         <div className="px-3 py-2 bg-gray-900/40 border-t border-gray-700 flex items-center justify-between flex-shrink-0">
           <div className="text-xs text-gray-400">
-            Page {currentPage} of {totalPages} • {startIndex + 1}-{Math.min(endIndex, filteredFiles.length)} of {filteredFiles.length}
+            Página {currentPage} de {totalPages} • {startIndex + 1}-{Math.min(endIndex, filteredFiles.length)} de {filteredFiles.length}
           </div>
           <div className="flex gap-1.5">
             <button
@@ -147,14 +147,14 @@ export const FileList: React.FC<FileListProps> = ({ files, selectedFileUrls, onS
               disabled={currentPage === 1}
               className="px-2.5 py-1 bg-gray-700 border border-gray-600 rounded text-xs text-white hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
-              Prev
+              Anterior
             </button>
             <button
               onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
               disabled={currentPage === totalPages}
               className="px-2.5 py-1 bg-gray-700 border border-gray-600 rounded text-xs text-white hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
-              Next
+              Siguiente
             </button>
           </div>
         </div>

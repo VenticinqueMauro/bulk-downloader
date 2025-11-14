@@ -25,20 +25,20 @@ interface FilterBarProps {
 }
 
 const filterOptions: { id: FilterType; label: string; icon: React.FC<React.SVGProps<SVGSVGElement>> }[] = [
-  { id: 'all', label: 'All', icon: AllIcon },
-  { id: 'image', label: 'Images', icon: ImageIcon },
+  { id: 'all', label: 'Todos', icon: AllIcon },
+  { id: 'image', label: 'Imágenes', icon: ImageIcon },
   { id: 'video', label: 'Videos', icon: VideoIcon },
   { id: 'audio', label: 'Audio', icon: MusicIcon },
-  { id: 'document', label: 'Documents', icon: DocumentIcon },
-  { id: 'archive', label: 'Archives', icon: ArchiveIcon },
-  { id: 'font', label: 'Fonts', icon: FontIcon },
-  { id: 'style', label: 'Styles', icon: StyleIcon },
+  { id: 'document', label: 'Documentos', icon: DocumentIcon },
+  { id: 'archive', label: 'Archivos', icon: ArchiveIcon },
+  { id: 'font', label: 'Fuentes', icon: FontIcon },
+  { id: 'style', label: 'Estilos', icon: StyleIcon },
   { id: 'script', label: 'Scripts', icon: ScriptIcon },
-  { id: 'code', label: 'Code', icon: CodeIcon },
-  { id: 'model3d', label: '3D Models', icon: Model3DIcon },
-  { id: 'data', label: 'Data', icon: DataIcon },
-  { id: 'executable', label: 'Executables', icon: ExecutableIcon },
-  { id: 'other', label: 'Other', icon: OtherIcon },
+  { id: 'code', label: 'Código', icon: CodeIcon },
+  { id: 'model3d', label: 'Modelos 3D', icon: Model3DIcon },
+  { id: 'data', label: 'Datos', icon: DataIcon },
+  { id: 'executable', label: 'Ejecutables', icon: ExecutableIcon },
+  { id: 'other', label: 'Otros', icon: OtherIcon },
 ];
 
 export const FilterBar: React.FC<FilterBarProps> = ({ currentFilter, onFilterChange, fileCounts }) => {

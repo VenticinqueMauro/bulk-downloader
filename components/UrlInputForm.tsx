@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { SearchIcon, SparklesIcon } from './icons';
+import { Tooltip } from './Tooltip';
 
 interface UrlInputFormProps {
   onStandardScan: (url: string) => void;
@@ -74,30 +75,42 @@ export const UrlInputForm: React.FC<UrlInputFormProps> = ({
             className="w-full px-4 py-2.5 text-base bg-gray-900 border-2 border-gray-700 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition text-white placeholder-gray-500 disabled:opacity-50"
           />
         </div>
-        <div className="mt-3 flex flex-col sm:flex-row justify-center items-stretch gap-2">
-          <button
-            onClick={() => handleSingleUrlSubmit('standard')}
-            disabled={isStandardLoading || isAiLoading || !url.trim()}
-            className="flex-1 flex items-center justify-center gap-2 px-5 py-2.5 text-base font-bold text-white bg-sky-600 rounded-lg hover:bg-sky-500 transition-all duration-200 disabled:bg-sky-800 disabled:text-sky-400 disabled:cursor-not-allowed"
+        <div className="mt-3 flex flex-col sm:flex-row justify-center items-stretch gap-2 w-full">
+          <Tooltip
+            id="standard-scan"
+            content="Escaneo rápido y gratuito que encuentra archivos descargables en la página actual. Ilimitado y sin necesidad de configuración."
+            position="bottom"
           >
-            {isStandardLoading ? (
-              <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-            ) : <SearchIcon className="h-5 w-5" />}
-            <span>Standard Scan</span>
-          </button>
-          <button
-            onClick={() => handleSingleUrlSubmit('ai')}
-            disabled={isStandardLoading || isAiLoading || !url.trim()}
-            className="flex-1 flex items-center justify-center gap-2 px-5 py-2.5 text-base font-semibold text-amber-300 bg-amber-400/10 border-2 border-amber-400/20 rounded-lg hover:bg-amber-400/20 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+            <button
+              onClick={() => handleSingleUrlSubmit('standard')}
+              disabled={isStandardLoading || isAiLoading || !url.trim()}
+              className="flex-1 flex items-center justify-center gap-2 px-5 py-2.5 text-base font-bold text-white bg-sky-600 rounded-lg hover:bg-sky-500 transition-all duration-200 disabled:bg-sky-800 disabled:text-sky-400 disabled:cursor-not-allowed"
+            >
+              {isStandardLoading ? (
+                <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+              ) : <SearchIcon className="h-5 w-5" />}
+              <span>Standard Scan</span>
+            </button>
+          </Tooltip>
+          <Tooltip
+            id="ai-scan"
+            content="Escaneo profundo con IA de Google Gemini que encuentra archivos ocultos o embebidos. Requiere API key gratuita de Google AI Studio."
+            position="bottom"
           >
-            {isAiLoading ? (
-              <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-            ) : <SparklesIcon className="h-5 w-5" />}
-            <span>AI Deep Scan</span>
-          </button>
+            <button
+              onClick={() => handleSingleUrlSubmit('ai')}
+              disabled={isStandardLoading || isAiLoading || !url.trim()}
+              className="flex-1 flex items-center justify-center gap-2 px-5 py-2.5 text-base font-semibold text-amber-300 bg-amber-400/10 border-2 border-amber-400/20 rounded-lg hover:bg-amber-400/20 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isAiLoading ? (
+                <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+              ) : <SparklesIcon className="h-5 w-5" />}
+              <span>AI Deep Scan</span>
+            </button>
+          </Tooltip>
         </div>
         <p className="text-center text-xs text-gray-500 mt-2">
-          Standard scan is fast & free. AI Deep Scan requires an API key.
+          El escaneo estándar es rápido y gratis. El AI Deep Scan requiere una API key.
         </p>
       </div>
     </div>

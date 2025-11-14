@@ -22,13 +22,13 @@ const OptionsPage: React.FC = () => {
       }
     } catch (error) {
       console.error('Error loading API key:', error);
-      setMessage({ type: 'error', text: 'Failed to load saved API key.' });
+      setMessage({ type: 'error', text: 'Error al cargar la API key guardada.' });
     }
   };
 
   const handleSave = async () => {
     if (!apiKey || apiKey.trim() === '' || apiKey.startsWith('*')) {
-      setMessage({ type: 'error', text: 'Please enter a valid API key.' });
+      setMessage({ type: 'error', text: 'Por favor ingresa una API key válida.' });
       return;
     }
 
@@ -38,7 +38,7 @@ const OptionsPage: React.FC = () => {
     try {
       await chrome.storage.sync.set({ geminiApiKey: apiKey.trim() });
       setSavedKey(apiKey.trim());
-      setMessage({ type: 'success', text: 'API Key saved successfully!' });
+      setMessage({ type: 'success', text: '¡API Key guardada exitosamente!' });
 
       // Mask the key after saving
       setTimeout(() => {
@@ -46,14 +46,14 @@ const OptionsPage: React.FC = () => {
       }, 1000);
     } catch (error) {
       console.error('Error saving API key:', error);
-      setMessage({ type: 'error', text: 'Failed to save API key. Please try again.' });
+      setMessage({ type: 'error', text: 'Error al guardar la API key. Por favor intenta de nuevo.' });
     } finally {
       setIsSaving(false);
     }
   };
 
   const handleClear = async () => {
-    if (!confirm('Are you sure you want to remove your API key? This will disable AI scanning features.')) {
+    if (!confirm('¿Estás seguro de eliminar tu API key? Esto deshabilitará las funciones de escaneo con IA.')) {
       return;
     }
 
@@ -61,10 +61,10 @@ const OptionsPage: React.FC = () => {
       await chrome.storage.sync.remove(['geminiApiKey']);
       setApiKey('');
       setSavedKey('');
-      setMessage({ type: 'info', text: 'API Key removed.' });
+      setMessage({ type: 'info', text: 'API Key eliminada.' });
     } catch (error) {
       console.error('Error removing API key:', error);
-      setMessage({ type: 'error', text: 'Failed to remove API key.' });
+      setMessage({ type: 'error', text: 'Error al eliminar la API key.' });
     }
   };
 
@@ -81,28 +81,28 @@ const OptionsPage: React.FC = () => {
           <h1 className="text-3xl font-bold mb-2 bg-gradient-to-r from-purple-400 to-pink-600 bg-clip-text text-transparent">
             FileHarvest
           </h1>
-          <p className="text-gray-400">Extension Settings</p>
+          <p className="text-gray-400">Configuración de la Extensión</p>
         </div>
 
         <div className="bg-gray-800 rounded-lg border border-gray-700 p-6 mb-6">
           <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
             <span className="text-2xl">🔑</span>
-            AI API Key
+            Clave API de IA
           </h2>
 
           <div className="mb-4">
             <p className="text-gray-300 mb-2">
-              To use the AI Deep Scan feature, you need an AI API key.
+              Para usar la función AI Deep Scan, necesitas una clave API de IA.
             </p>
             <p className="text-gray-400 text-sm mb-4">
-              Your API key is stored locally in your browser and never shared with anyone.
+              Tu clave API se almacena localmente en tu navegador y nunca se comparte con nadie.
             </p>
           </div>
 
           <div className="space-y-4">
             <div>
               <label htmlFor="apiKey" className="block text-sm font-medium mb-2 text-gray-300">
-                API Key
+                Clave API
               </label>
               <input
                 type="password"
@@ -110,7 +110,7 @@ const OptionsPage: React.FC = () => {
                 value={apiKey}
                 onChange={(e) => setApiKey(e.target.value)}
                 onFocus={handleInputFocus}
-                placeholder="Enter your AI API key"
+                placeholder="Ingresa tu clave API de IA"
                 className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all"
               />
             </div>
@@ -131,7 +131,7 @@ const OptionsPage: React.FC = () => {
                 disabled={isSaving}
                 className="px-6 py-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg font-medium hover:from-purple-600 hover:to-pink-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {isSaving ? 'Saving...' : 'Save API Key'}
+                {isSaving ? 'Guardando...' : 'Guardar Clave API'}
               </button>
 
               {savedKey && (
@@ -139,7 +139,7 @@ const OptionsPage: React.FC = () => {
                   onClick={handleClear}
                   className="px-6 py-2 bg-gray-700 border border-gray-600 rounded-lg font-medium hover:bg-gray-600 transition-all"
                 >
-                  Clear API Key
+                  Eliminar Clave API
                 </button>
               )}
             </div>
@@ -149,50 +149,62 @@ const OptionsPage: React.FC = () => {
         <div className="bg-gray-800 rounded-lg border border-gray-700 p-6">
           <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
             <span className="text-2xl">📖</span>
-            How to Get an API Key
+            Cómo Obtener una Clave API
           </h2>
 
-          <ol className="space-y-3 text-gray-300">
-            <li className="flex gap-3">
-              <span className="font-bold text-purple-400 min-w-[24px]">1.</span>
-              <span>
-                Visit{' '}
+          <ol className="space-y-4 text-gray-300">
+            <li className="flex gap-3 items-start">
+              <span className="flex items-center justify-center w-8 h-8 bg-purple-500/20 text-purple-400 font-bold rounded-full flex-shrink-0">1</span>
+              <div className="flex-1">
+                <p className="font-medium mb-1">Visita Google AI Studio</p>
                 <a
                   href="https://aistudio.google.com/apikey"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-purple-400 hover:text-purple-300 underline"
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors text-sm"
                 >
-                  Google AI Studio
+                  <span>Abrir Google AI Studio</span>
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                  </svg>
                 </a>
-              </span>
+              </div>
             </li>
-            <li className="flex gap-3">
-              <span className="font-bold text-purple-400 min-w-[24px]">2.</span>
-              <span>Sign in with your Google account</span>
+            <li className="flex gap-3 items-start">
+              <span className="flex items-center justify-center w-8 h-8 bg-purple-500/20 text-purple-400 font-bold rounded-full flex-shrink-0">2</span>
+              <div className="flex-1">
+                <p className="font-medium">Inicia sesión con tu cuenta de Google</p>
+                <p className="text-sm text-gray-400 mt-1">Cualquier cuenta de Google funciona</p>
+              </div>
             </li>
-            <li className="flex gap-3">
-              <span className="font-bold text-purple-400 min-w-[24px]">3.</span>
-              <span>Click "Create API Key" or "Get API Key"</span>
+            <li className="flex gap-3 items-start">
+              <span className="flex items-center justify-center w-8 h-8 bg-purple-500/20 text-purple-400 font-bold rounded-full flex-shrink-0">3</span>
+              <div className="flex-1">
+                <p className="font-medium">Haz clic en "Create API Key"</p>
+                <p className="text-sm text-gray-400 mt-1">Si ya tienes un proyecto, selecciónalo. Si no, crea uno nuevo.</p>
+              </div>
             </li>
-            <li className="flex gap-3">
-              <span className="font-bold text-purple-400 min-w-[24px]">4.</span>
-              <span>Copy the generated API key and paste it above</span>
+            <li className="flex gap-3 items-start">
+              <span className="flex items-center justify-center w-8 h-8 bg-purple-500/20 text-purple-400 font-bold rounded-full flex-shrink-0">4</span>
+              <div className="flex-1">
+                <p className="font-medium">Copia y pega la API key arriba</p>
+                <p className="text-sm text-gray-400 mt-1">Tu clave se guardará de forma segura solo en tu navegador</p>
+              </div>
             </li>
           </ol>
 
           <div className="mt-4 p-4 bg-yellow-900/20 border border-yellow-700/50 rounded-lg">
             <p className="text-yellow-300 text-sm">
-              <strong>Note:</strong> Google AI API has a free tier with generous limits. Check the{' '}
+              <strong>Nota:</strong> La API de Google AI tiene un plan gratuito con límites generosos. Consulta la{' '}
               <a
                 href="https://ai.google.dev/pricing"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="underline hover:text-yellow-200"
               >
-                pricing page
+                página de precios
               </a>
-              {' '}for details.
+              {' '}para más detalles.
             </p>
           </div>
         </div>
