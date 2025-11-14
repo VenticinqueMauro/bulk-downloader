@@ -1,10 +1,11 @@
 {
   "manifest_version": 3,
   "name": "FileHarvest - Descargador Masivo de Archivos",
+  "short_name": "FileHarvest",
   "description": "Descarga archivos en masa desde cualquier página web. Escaneo con IA, filtros avanzados, tamaños reales. 100% gratis, sin publicidad, sin rastreo.",
   "version": "1.1.0",
   "author": "Mauro Venticinque",
-  "homepage_url": "https://www.m25.com.ar/",
+  "homepage_url": "https://github.com/VenticinqueMauro/bulk-downloader",
   "icons": {
     "16": "icons/icon16.png",
     "32": "icons/icon32.png",
