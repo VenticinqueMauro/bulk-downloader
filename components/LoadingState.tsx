@@ -79,11 +79,13 @@ export const LoadingState: React.FC<LoadingStateProps> = ({ scanType, url, onCan
         <div className="flex justify-center mb-6">
           <div className="relative">
             {/* Spinning outer ring */}
-            <div className="w-20 h-20 rounded-full border-4 border-gray-700 animate-spin border-t-sky-500"></div>
+            <div className={`w-20 h-20 rounded-full border-4 border-gray-700 animate-spin ${
+              scanType === 'ai' ? 'border-t-yellow-500' : 'border-t-sky-500'
+            }`}></div>
             {/* Icon in center */}
             <div className="flex absolute inset-0 justify-center items-center">
               {scanType === 'ai' ? (
-                <svg className="w-8 h-8 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="w-8 h-8 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
               ) : (
@@ -98,7 +100,7 @@ export const LoadingState: React.FC<LoadingStateProps> = ({ scanType, url, onCan
         {/* Title */}
         <h3 className="mb-2 text-xl font-bold text-center">
           {scanType === 'ai' ? (
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-amber-500">
               Escaneando con IA{dots}
             </span>
           ) : (
@@ -117,7 +119,7 @@ export const LoadingState: React.FC<LoadingStateProps> = ({ scanType, url, onCan
             <div
               className={`h-full rounded-full transition-all duration-1000 ${
                 scanType === 'ai'
-                  ? 'bg-gradient-to-r from-purple-500 to-pink-500'
+                  ? 'bg-gradient-to-r from-yellow-500 to-amber-500'
                   : 'bg-sky-500'
               }`}
               style={{
