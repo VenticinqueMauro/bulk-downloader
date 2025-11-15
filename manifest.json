@@ -22,10 +22,15 @@
     }
   },
   "options_page": "options.html",
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
   "permissions": [
     "downloads",
     "storage",
     "activeTab",
-    "tabs"
+    "tabs",
+    "notifications"
   ]
 }

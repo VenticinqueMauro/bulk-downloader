@@ -1,5 +1,6 @@
 
 import { GoogleGenAI, Type } from "@google/genai";
+import { parse } from 'node-html-parser';
 import { FileItem, FileCategory, ScanPreferences } from '../types';
 
 // Error class for missing API key
@@ -242,9 +243,8 @@ export const performStandardScan = async (
     // Fetch content (will use proxy if configured, or mock if not)
     const html = await fetchUrlContent(url);
 
-    // Parse HTML with DOMParser
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(html, 'text/html');
+    // Parse HTML with node-html-parser (works in service workers)
+    const doc = parse(html);
 
     const foundFiles = new Map<string, FileItem>();
 

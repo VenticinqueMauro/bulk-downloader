@@ -8,7 +8,6 @@ import { ActionBar } from './components/ActionBar';
 import { WelcomeMessage } from './components/WelcomeMessage';
 import { Onboarding } from './components/Onboarding';
 import { FileItem, FilterType, ScanPreferences, FileCategory } from './types';
-import { performStandardScan, scanUrlWithAI, ApiKeyMissingError } from './services/geminiService';
 import { SearchIcon } from './components/icons';
 
 // Lazy load heavy components
@@ -41,7 +40,7 @@ const App: React.FC = () => {
   // Onboarding state
   const [showOnboarding, setShowOnboarding] = useState(false);
 
-  // Load saved preferences and check onboarding status on mount
+  // Load saved preferences, check onboarding status, and restore scan state on mount
   useEffect(() => {
     chrome.storage.sync.get(['scanPreferences', 'hasSeenOnboarding'], (result) => {
       if (result.scanPreferences) {
@@ -52,6 +51,62 @@ const App: React.FC = () => {
         setShowOnboarding(true);
       }
     });
+
+    // Request scan state from background service worker
+    chrome.runtime.sendMessage({ type: 'GET_SCAN_STATE' }, (response) => {
+      if (response?.success && response.state) {
+        const state = response.state;
+        console.log('📥 Restored scan state from background:', state);
+
+        // Restore scan state
+        if (state.isScanning) {
+          if (state.scanType === 'standard') {
+            setIsStandardLoading(true);
+          } else if (state.scanType === 'ai') {
+            setIsAiLoading(true);
+          }
+          setLastScannedUrl(state.url);
+          setHasScanned(true);
+        } else if (state.files.length > 0) {
+          // Scan completed, restore results
+          setAllFiles(state.files);
+          setLastScannedUrl(state.url);
+          setHasScanned(true);
+        } else if (state.error) {
+          // Scan failed, show error
+          setError(state.error);
+          setLastScannedUrl(state.url);
+          setHasScanned(true);
+        }
+      }
+    });
+
+    // Listen for messages from background service worker
+    const messageListener = (message: any) => {
+      console.log('📨 Popup received message from background:', message.type);
+
+      if (message.type === 'SCAN_COMPLETE') {
+        setIsStandardLoading(false);
+        setIsAiLoading(false);
+        setAllFiles(message.files);
+        setError(null);
+        setHasScanned(true);
+        console.log(`✅ Scan completed: ${message.files.length} files found`);
+      } else if (message.type === 'SCAN_ERROR') {
+        setIsStandardLoading(false);
+        setIsAiLoading(false);
+        setError(message.error);
+        setHasScanned(true);
+        console.error('❌ Scan failed:', message.error);
+      }
+    };
+
+    chrome.runtime.onMessage.addListener(messageListener);
+
+    // Cleanup listener on unmount
+    return () => {
+      chrome.runtime.onMessage.removeListener(messageListener);
+    };
   }, []);
   
   const handleClearResults = useCallback(() => {
@@ -59,6 +114,8 @@ const App: React.FC = () => {
     setSelectedFileUrls(new Set());
     setError(null);
     setHasScanned(false);
+    // Clear background scan state
+    chrome.runtime.sendMessage({ type: 'CLEAR_SCAN_STATE' });
   }, []);
 
   // Open preferences modal before scanning
@@ -103,16 +160,38 @@ const App: React.FC = () => {
     setError(null);
     setSelectedFileUrls(new Set());
     setLastScannedUrl(url);
+    setHasScanned(true);
 
+    console.log('🚀 Popup: Starting standard scan for:', url);
+
+    // Send scan request to background service worker
     try {
-      const foundFiles = await performStandardScan(url, preferences);
-      setAllFiles(foundFiles); // Standard scan replaces all previous results
-      setHasScanned(true); // Mark that a scan has been performed
-    } catch (e: any) {
-      console.error(e);
-      setError(e.message || 'El escaneo estándar falló. Por favor intenta de nuevo.');
-      setHasScanned(true); // Still mark as scanned even on error
-    } finally {
+      chrome.runtime.sendMessage({
+        type: 'START_STANDARD_SCAN',
+        url,
+        preferences,
+      }, (response) => {
+        // Check for runtime errors
+        if (chrome.runtime.lastError) {
+          console.error('❌ Popup: Runtime error:', chrome.runtime.lastError);
+          setError(`Error de comunicación: ${chrome.runtime.lastError.message}`);
+          setIsStandardLoading(false);
+          return;
+        }
+
+        console.log('📨 Popup: Response from background:', response);
+
+        if (!response?.success) {
+          const errorMsg = response?.message || 'No se pudo iniciar el escaneo';
+          console.error('❌ Popup: Scan failed to start:', errorMsg);
+          setError(`No se pudo iniciar el escaneo: ${errorMsg}`);
+          setIsStandardLoading(false);
+        }
+        // Else: scan started successfully, will receive results via message listener
+      });
+    } catch (error: any) {
+      console.error('❌ Popup: Exception sending message:', error);
+      setError(`Error inesperado: ${error.message}`);
       setIsStandardLoading(false);
     }
   };
@@ -121,22 +200,38 @@ const App: React.FC = () => {
     setIsAiLoading(true);
     setError(null);
     setLastScannedUrl(url);
+    setHasScanned(true);
 
+    console.log('🤖 Popup: Starting AI scan for:', url);
+
+    // Send scan request to background service worker
     try {
-      const foundFiles = await scanUrlWithAI(url, preferences);
-      // Using a Map to deduplicate files by URL, adding AI results to any existing ones
-      const uniqueFiles = Array.from(new Map(foundFiles.map(file => [file.url, file])).values());
-      setAllFiles(prevFiles => Array.from(new Map([...prevFiles, ...uniqueFiles].map(f => [f.url, f])).values()));
-      setHasScanned(true); // Mark that a scan has been performed
-    } catch (e: any) {
-      console.error(e);
-      if (e instanceof ApiKeyMissingError) {
-        setError('La clave de IA no está configurada. Haz clic aquí para abrir la configuración y agregar tu clave API de IA.');
-      } else {
-        setError(e.message || 'El escaneo con IA falló. Por favor verifica la consola para más detalles.');
-      }
-      setHasScanned(true); // Still mark as scanned even on error
-    } finally {
+      chrome.runtime.sendMessage({
+        type: 'START_AI_SCAN',
+        url,
+        preferences,
+      }, (response) => {
+        // Check for runtime errors
+        if (chrome.runtime.lastError) {
+          console.error('❌ Popup: Runtime error:', chrome.runtime.lastError);
+          setError(`Error de comunicación: ${chrome.runtime.lastError.message}`);
+          setIsAiLoading(false);
+          return;
+        }
+
+        console.log('📨 Popup: Response from background:', response);
+
+        if (!response?.success) {
+          const errorMsg = response?.message || 'No se pudo iniciar el escaneo con IA';
+          console.error('❌ Popup: AI scan failed to start:', errorMsg);
+          setError(`No se pudo iniciar el escaneo con IA: ${errorMsg}`);
+          setIsAiLoading(false);
+        }
+        // Else: scan started successfully, will receive results via message listener
+      });
+    } catch (error: any) {
+      console.error('❌ Popup: Exception sending message:', error);
+      setError(`Error inesperado: ${error.message}`);
       setIsAiLoading(false);
     }
   };
@@ -187,7 +282,7 @@ const App: React.FC = () => {
         {error && (
             <div className="mb-3 p-3 bg-rose-900/50 border border-rose-700 text-rose-300 rounded-lg flex-shrink-0">
                 <p className="text-center text-sm mb-2">{error}</p>
-                {error.includes('clave') && (
+                {(error.includes('clave') || error.includes('API key')) && (
                   <div className="text-center">
                     <button
                       onClick={handleOpenOptions}

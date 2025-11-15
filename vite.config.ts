@@ -33,6 +33,7 @@ export default defineConfig(({ mode }) => {
           input: {
             popup: path.resolve(__dirname, 'popup.html'),
             options: path.resolve(__dirname, 'options.html'),
+            background: path.resolve(__dirname, 'background.ts'),
           },
           output: {
             entryFileNames: '[name].js',
@@ -47,14 +48,14 @@ export default defineConfig(({ mode }) => {
           }
         },
         outDir: 'dist',
-        // Enable minification and tree shaking
-        minify: 'terser',
-        terserOptions: {
-          compress: {
-            drop_console: true, // Remove console.log in production
-            drop_debugger: true,
-          },
-        },
+        // TEMPORARILY DISABLED for debugging - keep console.log statements visible
+        minify: false,
+        // terserOptions: {
+        //   compress: {
+        //     drop_console: true, // Remove console.log in production
+        //     drop_debugger: true,
+        //   },
+        // },
         // Optimize chunk size warnings
         chunkSizeWarningLimit: 500,
       },
