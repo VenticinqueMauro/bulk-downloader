@@ -6,6 +6,7 @@ import { FilterBar } from './components/FilterBar';
 import { FileList } from './components/FileList';
 import { ActionBar } from './components/ActionBar';
 import { WelcomeMessage } from './components/WelcomeMessage';
+import { LoadingState } from './components/LoadingState';
 import { Onboarding } from './components/Onboarding';
 import { FileItem, FilterType, ScanPreferences, FileCategory } from './types';
 import { SearchIcon } from './components/icons';
@@ -116,6 +117,23 @@ const App: React.FC = () => {
     setHasScanned(false);
     // Clear background scan state
     chrome.runtime.sendMessage({ type: 'CLEAR_SCAN_STATE' });
+  }, []);
+
+  const handleCancelScan = useCallback(() => {
+    console.log('🛑 User cancelled scan');
+
+    // Send cancel message to background worker
+    chrome.runtime.sendMessage({ type: 'CANCEL_SCAN' }, (response) => {
+      if (response?.success) {
+        console.log('✅ Scan cancelled successfully');
+        setIsStandardLoading(false);
+        setIsAiLoading(false);
+        setError('Escaneo cancelado por el usuario');
+        setHasScanned(true);
+      } else {
+        console.warn('⚠️ Failed to cancel scan:', response?.message);
+      }
+    });
   }, []);
 
   // Open preferences modal before scanning
@@ -310,6 +328,15 @@ const App: React.FC = () => {
           </div>
         ) : (
           <>
+            {/* Show Loading state when scanning */}
+            {(isStandardLoading || isAiLoading) && (
+              <LoadingState
+                scanType={isAiLoading ? 'ai' : 'standard'}
+                url={lastScannedUrl}
+                onCancel={handleCancelScan}
+              />
+            )}
+
             {/* Show Welcome message when no scan has been performed yet */}
             {!hasScanned && !isStandardLoading && !isAiLoading && (
               <WelcomeMessage />
