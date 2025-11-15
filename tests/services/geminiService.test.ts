@@ -3,6 +3,13 @@ import {
   performStandardScan,
   scanUrlWithAI,
   ApiKeyMissingError,
+  ProxyError,
+  ValidationError,
+  TimeoutError,
+  clearAllCache,
+  getCacheStats,
+  getMetrics,
+  resetMetrics,
 } from '../../services/geminiService';
 import { FileItem, ScanPreferences } from '../../types';
 import { GoogleGenAI } from '@google/genai';
@@ -597,6 +604,354 @@ describe('geminiService', () => {
         const imgFile = files.find(f => f.url.includes('photo.png'));
         expect(imgFile?.name).toContain('Nice Photo');
       });
+    });
+  });
+
+  describe('Error Classes', () => {
+    it('should create ProxyError with correct properties', () => {
+      const error = new ProxyError('Test proxy error', 500);
+      expect(error.message).toBe('Test proxy error');
+      expect(error.name).toBe('ProxyError');
+      expect(error.statusCode).toBe(500);
+      expect(error).toBeInstanceOf(Error);
+    });
+
+    it('should create ProxyError with original error', () => {
+      const originalError = new Error('Original error');
+      const error = new ProxyError('Proxy error', 502, originalError);
+      expect(error.originalError).toBe(originalError);
+    });
+
+    it('should create ValidationError with correct properties', () => {
+      const error = new ValidationError('Invalid URL format');
+      expect(error.message).toBe('Invalid URL format');
+      expect(error.name).toBe('ValidationError');
+      expect(error).toBeInstanceOf(Error);
+    });
+
+    it('should create TimeoutError with correct properties', () => {
+      const error = new TimeoutError('Request timeout');
+      expect(error.message).toBe('Request timeout');
+      expect(error.name).toBe('TimeoutError');
+      expect(error).toBeInstanceOf(Error);
+    });
+
+    it('should create TimeoutError with default message', () => {
+      const error = new TimeoutError();
+      expect(error.message).toBe('Request timeout');
+    });
+  });
+
+  describe('URL Validation', () => {
+    beforeEach(() => {
+      vi.stubEnv('VITE_PROXY_URL', 'https://test-proxy.com/api/scrape');
+      (global.fetch as any).mockImplementation((url: string) => {
+        // Mock proxy to reject invalid URLs
+        if (!url.includes('http://') && !url.includes('https://')) {
+          return Promise.reject(new Error('Invalid URL'));
+        }
+        return Promise.resolve({
+          ok: true,
+          text: () => Promise.resolve('<html><body></body></html>'),
+        });
+      });
+    });
+
+    afterEach(() => {
+      vi.unstubAllEnvs();
+    });
+
+    it('should reject localhost URLs', async () => {
+      const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+      await expect(
+        performStandardScan('http://localhost:3000')
+      ).rejects.toThrow('Invalid URL');
+
+      consoleError.mockRestore();
+    });
+
+    it('should reject private IP addresses', async () => {
+      const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+      await expect(
+        performStandardScan('http://192.168.1.1')
+      ).rejects.toThrow('Invalid URL');
+
+      consoleError.mockRestore();
+    });
+
+    it('should reject 10.x.x.x addresses', async () => {
+      const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+      await expect(
+        performStandardScan('http://10.0.0.1')
+      ).rejects.toThrow('Invalid URL');
+
+      consoleError.mockRestore();
+    });
+
+    it('should reject 172.16-31.x.x addresses', async () => {
+      const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+      await expect(
+        performStandardScan('http://172.16.0.1')
+      ).rejects.toThrow('Invalid URL');
+
+      consoleError.mockRestore();
+    });
+
+    it('should accept valid public URLs', async () => {
+      const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
+      const consoleLog = vi.spyOn(console, 'log').mockImplementation(() => {});
+
+      await expect(
+        performStandardScan('https://example.com')
+      ).resolves.toBeDefined();
+
+      consoleError.mockRestore();
+      consoleLog.mockRestore();
+    });
+  });
+
+  describe('Cache Management', () => {
+    beforeEach(() => {
+      clearAllCache();
+      resetMetrics();
+      vi.stubEnv('VITE_PROXY_URL', 'https://test-proxy.com/api/scrape');
+
+      (global.fetch as any).mockImplementation(() => {
+        return Promise.resolve({
+          ok: true,
+          text: () => Promise.resolve('<html><body><a href="test.pdf">Test</a></body></html>'),
+        });
+      });
+    });
+
+    afterEach(() => {
+      vi.unstubAllEnvs();
+      clearAllCache();
+    });
+
+    it('should cache scan results', async () => {
+      const consoleLog = vi.spyOn(console, 'log').mockImplementation(() => {});
+      const consoleDebug = vi.spyOn(console, 'debug').mockImplementation(() => {});
+
+      // First scan - should fetch from proxy
+      await performStandardScan('https://example.com');
+      const firstCallCount = (global.fetch as any).mock.calls.length;
+
+      // Second scan - should use cache
+      await performStandardScan('https://example.com');
+      const secondCallCount = (global.fetch as any).mock.calls.length;
+
+      // Should have made only one proxy call (cached the second time)
+      expect(secondCallCount).toBe(firstCallCount);
+
+      consoleLog.mockRestore();
+      consoleDebug.mockRestore();
+    });
+
+    it('should return cache statistics', async () => {
+      const consoleLog = vi.spyOn(console, 'log').mockImplementation(() => {});
+      const consoleDebug = vi.spyOn(console, 'debug').mockImplementation(() => {});
+
+      await performStandardScan('https://example.com');
+
+      const stats = getCacheStats();
+      expect(stats.size).toBeGreaterThan(0);
+      expect(stats.entries).toBeInstanceOf(Array);
+      expect(stats.entries[0]).toHaveProperty('url');
+      expect(stats.entries[0]).toHaveProperty('age');
+
+      consoleLog.mockRestore();
+      consoleDebug.mockRestore();
+    });
+
+    it('should clear all cache', async () => {
+      const consoleLog = vi.spyOn(console, 'log').mockImplementation(() => {});
+      const consoleDebug = vi.spyOn(console, 'debug').mockImplementation(() => {});
+
+      await performStandardScan('https://example.com');
+
+      let stats = getCacheStats();
+      expect(stats.size).toBeGreaterThan(0);
+
+      clearAllCache();
+
+      stats = getCacheStats();
+      expect(stats.size).toBe(0);
+
+      consoleLog.mockRestore();
+      consoleDebug.mockRestore();
+    });
+  });
+
+  describe('Metrics and Telemetry', () => {
+    beforeEach(() => {
+      resetMetrics();
+      vi.stubEnv('VITE_PROXY_URL', 'https://test-proxy.com/api/scrape');
+
+      (global.fetch as any).mockImplementation(() => {
+        return Promise.resolve({
+          ok: true,
+          text: () => Promise.resolve('<html><body><a href="test.pdf">Test</a></body></html>'),
+        });
+      });
+
+      // Mock chrome storage for AI scans
+      (global.chrome.storage.sync.get as any).mockResolvedValue({
+        geminiApiKey: 'test-key',
+      });
+    });
+
+    afterEach(() => {
+      vi.unstubAllEnvs();
+      resetMetrics();
+    });
+
+    it('should track successful standard scans', async () => {
+      const consoleLog = vi.spyOn(console, 'log').mockImplementation(() => {});
+      const consoleDebug = vi.spyOn(console, 'debug').mockImplementation(() => {});
+
+      await performStandardScan('https://example.com');
+
+      const metrics = getMetrics();
+      expect(metrics.totalScans).toBe(1);
+      expect(metrics.successfulScans).toBe(1);
+      expect(metrics.failedScans).toBe(0);
+      expect(metrics.scansByType.standard).toBe(1);
+
+      consoleLog.mockRestore();
+      consoleDebug.mockRestore();
+    });
+
+    it('should track failed scans', async () => {
+      const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
+      const consoleDebug = vi.spyOn(console, 'debug').mockImplementation(() => {});
+
+      (global.fetch as any).mockRejectedValue(new Error('Network error'));
+
+      await expect(performStandardScan('https://example.com')).rejects.toThrow();
+
+      const metrics = getMetrics();
+      expect(metrics.totalScans).toBe(1);
+      expect(metrics.successfulScans).toBe(0);
+      expect(metrics.failedScans).toBe(1);
+
+      consoleError.mockRestore();
+      consoleDebug.mockRestore();
+    });
+
+    it('should track files found average', async () => {
+      const consoleLog = vi.spyOn(console, 'log').mockImplementation(() => {});
+      const consoleDebug = vi.spyOn(console, 'debug').mockImplementation(() => {});
+
+      (global.fetch as any).mockResolvedValue({
+        ok: true,
+        text: () => Promise.resolve('<html><body><a href="file1.pdf">1</a><a href="file2.pdf">2</a></body></html>'),
+      });
+
+      await performStandardScan('https://example.com');
+
+      const metrics = getMetrics();
+      expect(metrics.totalFilesFound).toBeGreaterThan(0);
+      expect(metrics.averageFilesPerScan).toBeGreaterThan(0);
+
+      consoleLog.mockRestore();
+      consoleDebug.mockRestore();
+    });
+
+    it('should reset metrics', () => {
+      const consoleLog = vi.spyOn(console, 'log').mockImplementation(() => {});
+
+      resetMetrics();
+
+      const metrics = getMetrics();
+      expect(metrics.totalScans).toBe(0);
+      expect(metrics.successfulScans).toBe(0);
+      expect(metrics.failedScans).toBe(0);
+      expect(metrics.totalFilesFound).toBe(0);
+      expect(metrics.averageFilesPerScan).toBe(0);
+      expect(metrics.scansByType.standard).toBe(0);
+      expect(metrics.scansByType.ai).toBe(0);
+
+      consoleLog.mockRestore();
+    });
+
+    it('should categorize error types in metrics', async () => {
+      const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
+      const consoleDebug = vi.spyOn(console, 'debug').mockImplementation(() => {});
+      const consoleWarn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+      // Simulate timeout error
+      (global.fetch as any).mockImplementation(() => {
+        return new Promise((_, reject) => {
+          setTimeout(() => reject({ name: 'AbortError' }), 100);
+        });
+      });
+
+      await expect(performStandardScan('https://example.com')).rejects.toThrow();
+
+      const metrics = getMetrics();
+      expect(metrics.errors.timeout).toBeGreaterThan(0);
+
+      consoleError.mockRestore();
+      consoleDebug.mockRestore();
+      consoleWarn.mockRestore();
+    });
+  });
+
+  describe('Retry Logic', () => {
+    beforeEach(() => {
+      vi.stubEnv('VITE_PROXY_URL', 'https://test-proxy.com/api/scrape');
+    });
+
+    afterEach(() => {
+      vi.unstubAllEnvs();
+    });
+
+    it('should retry failed requests', async () => {
+      const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
+      const consoleWarn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      const consoleLog = vi.spyOn(console, 'log').mockImplementation(() => {});
+      const consoleDebug = vi.spyOn(console, 'debug').mockImplementation(() => {});
+
+      let attempts = 0;
+      (global.fetch as any).mockImplementation(() => {
+        attempts++;
+        if (attempts < 2) {
+          return Promise.reject(new Error('Temporary network error'));
+        }
+        return Promise.resolve({
+          ok: true,
+          text: () => Promise.resolve('<html><body><a href="test.pdf">Test</a></body></html>'),
+        });
+      });
+
+      await performStandardScan('https://example.com');
+
+      expect(attempts).toBeGreaterThan(1);
+
+      consoleError.mockRestore();
+      consoleWarn.mockRestore();
+      consoleLog.mockRestore();
+      consoleDebug.mockRestore();
+    });
+
+    it('should not retry on validation errors', async () => {
+      const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
+      const consoleDebug = vi.spyOn(console, 'debug').mockImplementation(() => {});
+
+      await expect(
+        performStandardScan('http://localhost:3000')
+      ).rejects.toThrow('Invalid URL');
+
+      // Should fail immediately without retries
+      expect((global.fetch as any).mock.calls.length).toBe(0);
+
+      consoleError.mockRestore();
+      consoleDebug.mockRestore();
     });
   });
 });

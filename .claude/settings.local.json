@@ -11,7 +11,14 @@
       "Bash(findstr:*)",
       "Bash(dir /b \"D:\\MIS DATOS\\Desktop\\FREELANCE\\bulk-downloader\\*.md\")",
       "Bash(npm install:*)",
-      "Bash(npm run test:run:*)"
+      "Bash(npm run test:run:*)",
+      "Bash(dir:*)",
+      "Bash(git rm:*)",
+      "Bash(git push:*)",
+      "WebFetch(domain:gemini-proxy-b4y7.vercel.app)",
+      "Bash(curl:*)",
+      "Bash(npm run build:extension:*)",
+      "Bash(npm run:*)"
     ],
     "deny": [],
     "ask": []

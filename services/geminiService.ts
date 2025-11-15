@@ -234,9 +234,9 @@ export const performStandardScan = async (
   url: string,
   preferences?: ScanPreferences
 ): Promise<FileItem[]> => {
-  console.log(`🔍 Performing Standard Scan for: ${url}`);
+  logger.info(`Performing Standard Scan for: ${url}`);
   if (preferences) {
-    console.log(`   Filters: Categories=${preferences.categories.join(', ')}, MinSize=${preferences.minSize}, MaxSize=${preferences.maxSize}`);
+    logger.debug(`Filters: Categories=${preferences.categories.join(', ')}, MinSize=${preferences.minSize}, MaxSize=${preferences.maxSize}`);
   }
 
   try {
@@ -250,6 +250,8 @@ export const performStandardScan = async (
 
     // 1. Find all <a> links with downloadable extensions
     const links = doc.querySelectorAll('a[href]');
+    logger.debug(`Found ${links.length} links in HTML`);
+
     links.forEach((link) => {
       const href = link.getAttribute('href');
       if (!href) return;
@@ -258,7 +260,7 @@ export const performStandardScan = async (
         const absoluteUrl = new URL(href, url).href;
         const type = getFileType(absoluteUrl);
 
-        // Accept all files with recognized extensions (removed restrictive filter!)
+        // Accept all files with recognized extensions
         const linkText = link.textContent?.trim() || '';
         foundFiles.set(absoluteUrl, {
           url: absoluteUrl,
@@ -267,12 +269,15 @@ export const performStandardScan = async (
           size: 0
         });
       } catch (e) {
-        // Invalid URL, skip
+        // Invalid URL, skip silently
+        logger.debug(`Skipping invalid link: ${href}`);
       }
     });
 
     // 2. Find all <img> tags
     const images = doc.querySelectorAll('img[src]');
+    logger.debug(`Found ${images.length} images in HTML`);
+
     images.forEach((img) => {
       const src = img.getAttribute('src');
       if (!src) return;
@@ -287,12 +292,14 @@ export const performStandardScan = async (
           size: 0
         });
       } catch (e) {
-        // Invalid URL, skip
+        logger.debug(`Skipping invalid image: ${src}`);
       }
     });
 
     // 3. Find all <video> and <audio> tags
     const mediaElements = doc.querySelectorAll('video[src], audio[src], source[src]');
+    logger.debug(`Found ${mediaElements.length} media elements in HTML`);
+
     mediaElements.forEach((media) => {
       const src = media.getAttribute('src');
       if (!src) return;
@@ -307,12 +314,12 @@ export const performStandardScan = async (
           size: 0
         });
       } catch (e) {
-        // Invalid URL, skip
+        logger.debug(`Skipping invalid media: ${src}`);
       }
     });
 
     let results = Array.from(foundFiles.values());
-    console.log(`✅ Standard Scan found ${results.length} files (before filtering)`);
+    logger.info(`Standard Scan found ${results.length} unique files (before filtering)`);
 
     // Fetch file sizes in parallel (limit to avoid overwhelming the network)
     const BATCH_SIZE = 10;
@@ -327,26 +334,453 @@ export const performStandardScan = async (
 
     // Apply preference filters
     if (preferences) {
+      const beforeFilter = results.length;
       results = results.filter(file => matchesPreferences(file, preferences));
-      console.log(`   After filters: ${results.length} files match preferences`);
+      logger.info(`After filters: ${results.length}/${beforeFilter} files match preferences`);
     }
+
+    // Record successful scan metrics
+    recordScanMetrics('standard', true, results.length);
 
     return results;
 
   } catch (error: any) {
-    console.error('❌ Standard Scan failed:', error);
+    logger.error('Standard Scan failed:', error);
+
+    // Record failed scan metrics
+    recordScanMetrics('standard', false, 0, error);
+
+    // Re-throw with more specific error messages
+    if (error instanceof ValidationError) {
+      throw new Error(`Invalid URL: ${error.message}`);
+    }
+    if (error instanceof TimeoutError) {
+      throw new Error(`Scan timeout: The website took too long to respond. Please try again.`);
+    }
+    if (error instanceof ProxyError) {
+      throw new Error(`Proxy error: ${error.message}`);
+    }
+
     throw new Error(`Standard Scan failed: ${error.message}`);
   }
 };
 
 
-// Configuration: Proxy URL is loaded from environment variables
+// ===== CONFIGURATION =====
+// Proxy URL is loaded from environment variables
 // Set VITE_PROXY_URL in .env file
-// Leave empty to use mock data for testing
 const PROXY_URL = import.meta.env.VITE_PROXY_URL || '';
+
+// Request configuration
+const REQUEST_TIMEOUT = 30000; // 30 seconds
+const MAX_RETRIES = 3;
+const RETRY_DELAY = 1000; // 1 second
+
+// Cache configuration
+const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+const cache = new Map<string, { data: string; timestamp: number }>();
+
+// ===== LOGGING UTILITIES =====
+enum LogLevel {
+  DEBUG = 0,
+  INFO = 1,
+  WARN = 2,
+  ERROR = 3
+}
+
+const logger = {
+  debug: (message: string, ...args: any[]) => {
+    console.debug(`🔍 [DEBUG] ${message}`, ...args);
+  },
+  info: (message: string, ...args: any[]) => {
+    console.log(`ℹ️ [INFO] ${message}`, ...args);
+  },
+  warn: (message: string, ...args: any[]) => {
+    console.warn(`⚠️ [WARN] ${message}`, ...args);
+  },
+  error: (message: string, ...args: any[]) => {
+    console.error(`❌ [ERROR] ${message}`, ...args);
+  }
+};
+
+// ===== ERROR TYPES =====
+export class ProxyError extends Error {
+  constructor(message: string, public statusCode?: number, public originalError?: Error) {
+    super(message);
+    this.name = 'ProxyError';
+  }
+}
+
+export class ValidationError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'ValidationError';
+  }
+}
+
+export class TimeoutError extends Error {
+  constructor(message: string = 'Request timeout') {
+    super(message);
+    this.name = 'TimeoutError';
+  }
+}
+
+// ===== URL VALIDATION =====
+/**
+ * Validates URL before sending to proxy
+ * Prevents SSRF attacks and invalid URLs
+ */
+function validateUrl(urlString: string): void {
+  try {
+    const url = new URL(urlString);
+
+    // Only allow http/https protocols
+    if (!['http:', 'https:'].includes(url.protocol)) {
+      throw new ValidationError(`Invalid protocol: ${url.protocol}. Only HTTP and HTTPS are allowed.`);
+    }
+
+    // Block local/private IPs to prevent SSRF
+    const hostname = url.hostname.toLowerCase();
+    const blockedHosts = [
+      'localhost',
+      '127.0.0.1',
+      '0.0.0.0',
+      '::1',
+      '[::1]'
+    ];
+
+    if (blockedHosts.includes(hostname)) {
+      throw new ValidationError('Local URLs are not allowed for security reasons.');
+    }
+
+    // Block private IP ranges
+    if (
+      hostname.startsWith('192.168.') ||
+      hostname.startsWith('10.') ||
+      hostname.match(/^172\.(1[6-9]|2[0-9]|3[0-1])\./)
+    ) {
+      throw new ValidationError('Private network URLs are not allowed for security reasons.');
+    }
+
+  } catch (error) {
+    if (error instanceof ValidationError) {
+      throw error;
+    }
+    throw new ValidationError(`Invalid URL format: ${urlString}`);
+  }
+}
+
+// ===== RETRY UTILITY =====
+/**
+ * Retry a function with exponential backoff
+ */
+async function retryWithBackoff<T>(
+  fn: () => Promise<T>,
+  maxRetries: number = MAX_RETRIES,
+  baseDelay: number = RETRY_DELAY
+): Promise<T> {
+  let lastError: Error;
+
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    try {
+      return await fn();
+    } catch (error: any) {
+      lastError = error;
+
+      // Don't retry on validation errors or 4xx errors
+      if (
+        error instanceof ValidationError ||
+        error instanceof ApiKeyMissingError ||
+        (error instanceof ProxyError && error.statusCode && error.statusCode >= 400 && error.statusCode < 500)
+      ) {
+        throw error;
+      }
+
+      // Last attempt - throw error
+      if (attempt === maxRetries) {
+        logger.error(`Max retries (${maxRetries}) reached. Giving up.`);
+        throw error;
+      }
+
+      // Calculate exponential backoff delay
+      const delay = baseDelay * Math.pow(2, attempt);
+      logger.warn(`Attempt ${attempt + 1} failed. Retrying in ${delay}ms...`, error.message);
+      await new Promise(resolve => setTimeout(resolve, delay));
+    }
+  }
+
+  throw lastError!;
+}
+
+// ===== CACHE UTILITIES =====
+/**
+ * Get cached content if available and not expired
+ */
+function getCachedContent(url: string): string | null {
+  const cached = cache.get(url);
+  if (!cached) return null;
+
+  const now = Date.now();
+  if (now - cached.timestamp > CACHE_DURATION) {
+    cache.delete(url);
+    return null;
+  }
+
+  logger.debug(`Cache hit for URL: ${url}`);
+  return cached.data;
+}
+
+/**
+ * Store content in cache
+ */
+function setCachedContent(url: string, data: string): void {
+  cache.set(url, { data, timestamp: Date.now() });
+  logger.debug(`Cached content for URL: ${url}`);
+}
+
+/**
+ * Clear expired cache entries
+ */
+function clearExpiredCache(): void {
+  const now = Date.now();
+  let cleared = 0;
+
+  for (const [url, entry] of cache.entries()) {
+    if (now - entry.timestamp > CACHE_DURATION) {
+      cache.delete(url);
+      cleared++;
+    }
+  }
+
+  if (cleared > 0) {
+    logger.debug(`Cleared ${cleared} expired cache entries`);
+  }
+}
+
+/**
+ * Clear all cache entries
+ * Exported for manual cache management
+ */
+export function clearAllCache(): void {
+  const size = cache.size;
+  cache.clear();
+  logger.info(`Cleared all cache (${size} entries)`);
+}
+
+/**
+ * Get cache statistics
+ * Exported for debugging and monitoring
+ */
+export function getCacheStats(): { size: number; entries: Array<{ url: string; age: number }> } {
+  const now = Date.now();
+  const entries = Array.from(cache.entries()).map(([url, entry]) => ({
+    url,
+    age: now - entry.timestamp
+  }));
+
+  return {
+    size: cache.size,
+    entries
+  };
+}
+
+// ===== TELEMETRY & METRICS =====
+interface ScanMetrics {
+  totalScans: number;
+  successfulScans: number;
+  failedScans: number;
+  totalFilesFound: number;
+  averageFilesPerScan: number;
+  scansByType: {
+    standard: number;
+    ai: number;
+  };
+  errors: {
+    validation: number;
+    timeout: number;
+    proxy: number;
+    apiKey: number;
+    other: number;
+  };
+}
+
+const metrics: ScanMetrics = {
+  totalScans: 0,
+  successfulScans: 0,
+  failedScans: 0,
+  totalFilesFound: 0,
+  averageFilesPerScan: 0,
+  scansByType: {
+    standard: 0,
+    ai: 0
+  },
+  errors: {
+    validation: 0,
+    timeout: 0,
+    proxy: 0,
+    apiKey: 0,
+    other: 0
+  }
+};
+
+/**
+ * Record scan metrics
+ */
+function recordScanMetrics(type: 'standard' | 'ai', success: boolean, filesFound: number, error?: Error): void {
+  metrics.totalScans++;
+  metrics.scansByType[type]++;
+
+  if (success) {
+    metrics.successfulScans++;
+    metrics.totalFilesFound += filesFound;
+    metrics.averageFilesPerScan = metrics.totalFilesFound / metrics.successfulScans;
+    logger.debug(`Scan metrics: ${filesFound} files found (avg: ${metrics.averageFilesPerScan.toFixed(1)})`);
+  } else {
+    metrics.failedScans++;
+
+    // Categorize errors
+    if (error instanceof ValidationError) {
+      metrics.errors.validation++;
+    } else if (error instanceof TimeoutError) {
+      metrics.errors.timeout++;
+    } else if (error instanceof ProxyError) {
+      metrics.errors.proxy++;
+    } else if (error instanceof ApiKeyMissingError) {
+      metrics.errors.apiKey++;
+    } else {
+      metrics.errors.other++;
+    }
+
+    logger.debug(`Scan failed: ${error?.name || 'Unknown error'}`);
+  }
+}
+
+/**
+ * Get current metrics
+ * Exported for monitoring and analytics
+ */
+export function getMetrics(): ScanMetrics {
+  return { ...metrics };
+}
+
+/**
+ * Reset all metrics
+ * Exported for testing and manual reset
+ */
+export function resetMetrics(): void {
+  metrics.totalScans = 0;
+  metrics.successfulScans = 0;
+  metrics.failedScans = 0;
+  metrics.totalFilesFound = 0;
+  metrics.averageFilesPerScan = 0;
+  metrics.scansByType.standard = 0;
+  metrics.scansByType.ai = 0;
+  metrics.errors.validation = 0;
+  metrics.errors.timeout = 0;
+  metrics.errors.proxy = 0;
+  metrics.errors.apiKey = 0;
+  metrics.errors.other = 0;
+  logger.info('Metrics reset');
+}
+
+/**
+ * Fetch URL content via CORS proxy (internal implementation)
+ * This is the core fetch logic without retry
+ */
+const fetchUrlContentInternal = async (url: string): Promise<string> => {
+  // Validate URL before sending to proxy
+  validateUrl(url);
+
+  // Check cache first
+  const cached = getCachedContent(url);
+  if (cached) {
+    logger.info(`Using cached content for: ${url}`);
+    return cached;
+  }
+
+  // Clear expired cache entries periodically
+  clearExpiredCache();
+
+  logger.info(`Fetching content via proxy: ${url}`);
+
+  // Create AbortController for timeout
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT);
+
+  try {
+    const proxyUrl = `${PROXY_URL}?url=${encodeURIComponent(url)}`;
+    const response = await fetch(proxyUrl, {
+      signal: controller.signal,
+      headers: {
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+      }
+    });
+
+    clearTimeout(timeoutId);
+
+    if (!response.ok) {
+      // Try to parse error response as JSON
+      const errorData = await response.json().catch(() => ({}));
+      const errorMessage = errorData.message || errorData.error || response.statusText;
+
+      throw new ProxyError(
+        `Proxy error: ${errorMessage}`,
+        response.status
+      );
+    }
+
+    const html = await response.text();
+
+    if (!html || html.trim().length === 0) {
+      throw new ProxyError('Proxy returned empty content', response.status);
+    }
+
+    logger.info(`Successfully fetched ${html.length} bytes from ${url}`);
+
+    // Cache the result
+    setCachedContent(url, html);
+
+    return html;
+
+  } catch (error: any) {
+    clearTimeout(timeoutId);
+
+    // Handle specific error types
+    if (error.name === 'AbortError') {
+      throw new TimeoutError(`Request timeout after ${REQUEST_TIMEOUT}ms`);
+    }
+
+    if (error instanceof ProxyError || error instanceof ValidationError) {
+      throw error;
+    }
+
+    // Network errors
+    if (error.name === 'TypeError' && error.message.includes('fetch')) {
+      throw new ProxyError(
+        'Cannot connect to proxy server. Please check your internet connection and proxy configuration.',
+        undefined,
+        error
+      );
+    }
+
+    // Unknown errors
+    throw new ProxyError(
+      `Failed to fetch URL content: ${error.message}`,
+      undefined,
+      error
+    );
+  }
+}
 
 /**
  * Fetch URL content via CORS proxy
+ *
+ * Features:
+ * - URL validation to prevent SSRF attacks
+ * - Automatic retry with exponential backoff
+ * - Request timeout (30s default)
+ * - Response caching (5min default)
+ * - Comprehensive error handling
  *
  * If PROXY_URL is not set, returns mock data for testing.
  * In production, you must deploy a proxy backend (see PROXY_SETUP.md)
@@ -354,8 +788,8 @@ const PROXY_URL = import.meta.env.VITE_PROXY_URL || '';
 const fetchUrlContent = async (url: string): Promise<string> => {
   // Use mock data if no proxy is configured
   if (!PROXY_URL || PROXY_URL.trim() === '') {
-    console.warn('⚠️ No PROXY_URL configured. Using mock data.');
-    console.log(`📝 To fetch real content, deploy a proxy (see PROXY_SETUP.md) and set PROXY_URL in geminiService.ts`);
+    logger.warn('No PROXY_URL configured. Using mock data.');
+    logger.info('To fetch real content, deploy a proxy (see PROXY_SETUP.md) and set VITE_PROXY_URL in .env');
 
     // Return mock HTML for testing
     return `
@@ -375,58 +809,32 @@ const fetchUrlContent = async (url: string): Promise<string> => {
     `;
   }
 
-  // Fetch real content via proxy
-  try {
-    console.log(`🌐 Fetching content via proxy: ${url}`);
-
-    const proxyUrl = `${PROXY_URL}?url=${encodeURIComponent(url)}`;
-    const response = await fetch(proxyUrl);
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(
-        errorData.message ||
-        `Proxy returned ${response.status}: ${response.statusText}`
-      );
-    }
-
-    const html = await response.text();
-    console.log(`✅ Successfully fetched ${html.length} bytes from ${url}`);
-
-    return html;
-  } catch (error: any) {
-    console.error('❌ Error fetching URL via proxy:', error);
-
-    if (error.name === 'TypeError' && error.message.includes('fetch')) {
-      throw new Error(
-        `Cannot connect to proxy server. Please check that the proxy is deployed and PROXY_URL is correct. Error: ${error.message}`
-      );
-    }
-
-    throw new Error(`Failed to fetch URL content: ${error.message}`);
-  }
+  // Fetch with retry logic
+  return retryWithBackoff(() => fetchUrlContentInternal(url));
 };
 
 export const scanUrlWithAI = async (
   url: string,
   preferences?: ScanPreferences
 ): Promise<FileItem[]> => {
-  // Get API key from storage
-  const apiKey = await getApiKey();
-
-  // Initialize Gemini AI client with the retrieved API key
-  const ai = new GoogleGenAI({ apiKey });
-
-  // Fetch URL content
-  const pageContent = await fetchUrlContent(url);
-
-  console.log(`🤖 Performing AI Scan for: ${url}`);
+  logger.info(`Performing AI Scan for: ${url}`);
   if (preferences) {
-    console.log(`   Filters: Categories=${preferences.categories.join(', ')}, MinSize=${preferences.minSize}, MaxSize=${preferences.maxSize}`);
+    logger.debug(`Filters: Categories=${preferences.categories.join(', ')}, MinSize=${preferences.minSize}, MaxSize=${preferences.maxSize}`);
   }
 
-  // Build comprehensive prompt with all file categories
-  const prompt = `Analyze the following HTML content from the URL "${url}" and extract all direct links to downloadable files.
+  try {
+    // Get API key from storage
+    const apiKey = await getApiKey();
+
+    // Initialize Gemini AI client with the retrieved API key
+    const ai = new GoogleGenAI({ apiKey });
+
+    // Fetch URL content
+    const pageContent = await fetchUrlContent(url);
+    logger.debug(`Fetched ${pageContent.length} bytes of HTML content`);
+
+    // Build comprehensive prompt with all file categories
+    const prompt = `Analyze the following HTML content from the URL "${url}" and extract all direct links to downloadable files.
   For each file, provide its absolute URL, a descriptive name based on the link text or file name, its file type, and its size in bytes (use 0 if unknown).
 
   The file type must be one of these categories:
@@ -452,7 +860,8 @@ export const scanUrlWithAI = async (
   \`\`\`
   `;
 
-  try {
+    logger.info('Calling Gemini API with model: gemini-2.5-flash');
+
     const response = await ai.models.generateContent({
       model: "gemini-2.5-flash",
       contents: prompt,
@@ -486,11 +895,13 @@ export const scanUrlWithAI = async (
       }
     });
 
+    logger.info('Gemini API response received');
     const jsonText = response.text.trim();
-    // Assuming the Gemini API returns a valid JSON string based on the schema.
-    let files: FileItem[] = JSON.parse(jsonText);
+    logger.debug(`Response length: ${jsonText.length} characters`);
 
-    console.log(`✅ AI Scan found ${files.length} files (before filtering)`);
+    // Parse the JSON response
+    let files: FileItem[] = JSON.parse(jsonText);
+    logger.info(`AI Scan found ${files.length} files (before filtering)`);
 
     // Basic post-processing to ensure URLs are absolute
     files = files.map(file => {
@@ -500,22 +911,72 @@ export const scanUrlWithAI = async (
           url: new URL(file.url, url).href,
         };
       } catch (e) {
-        // If URL is malformed, keep original
+        logger.warn(`Invalid URL in AI response: ${file.url}`);
         return file;
       }
     });
 
     // Apply preference filters
     if (preferences) {
+      const beforeFilter = files.length;
       files = files.filter(file => matchesPreferences(file, preferences));
-      console.log(`   After filters: ${files.length} files match preferences`);
+      logger.info(`After filters: ${files.length}/${beforeFilter} files match preferences`);
     }
+
+    // Record successful scan metrics
+    recordScanMetrics('ai', true, files.length);
 
     return files;
 
-  } catch (error) {
-    console.error("Error scanning URL with Gemini:", error);
-    // Provide a more helpful error message.
-    throw new Error('Failed to parse file data from the URL. The AI model may have returned an unexpected response.');
+  } catch (error: any) {
+    logger.error("AI Scan failed:", error);
+    logger.debug("Error details:", {
+      name: error?.name,
+      message: error?.message,
+      stack: error?.stack,
+      cause: error?.cause
+    });
+
+    // Record failed scan metrics
+    recordScanMetrics('ai', false, 0, error);
+
+    // Handle specific error types
+    if (error instanceof ApiKeyMissingError) {
+      throw error; // Re-throw as-is
+    }
+
+    if (error instanceof ValidationError) {
+      throw new Error(`Invalid URL: ${error.message}`);
+    }
+
+    if (error instanceof TimeoutError) {
+      throw new Error(`AI Scan timeout: The website took too long to respond. Please try again.`);
+    }
+
+    if (error instanceof ProxyError) {
+      throw new Error(`Proxy error: ${error.message}`);
+    }
+
+    // Provide detailed error messages for Gemini API errors
+    const errorMsg = error?.message?.toLowerCase() || '';
+
+    if (errorMsg.includes('api key') || errorMsg.includes('authentication')) {
+      throw new Error('Gemini API Key error. Please verify your API key configuration.');
+    }
+
+    if (errorMsg.includes('quota') || errorMsg.includes('rate limit')) {
+      throw new Error('Gemini API quota exceeded. Please try again later or upgrade your plan.');
+    }
+
+    if (errorMsg.includes('network') || errorMsg.includes('fetch') || errorMsg.includes('connection')) {
+      throw new Error('Network error connecting to Gemini API. Please check your internet connection.');
+    }
+
+    if (errorMsg.includes('parse') || errorMsg.includes('json')) {
+      throw new Error('Failed to parse AI response. The content may be too complex. Try Standard Scan instead.');
+    }
+
+    // Generic error
+    throw new Error(`AI Scan failed: ${error?.message || 'Unknown error'}`);
   }
 };
