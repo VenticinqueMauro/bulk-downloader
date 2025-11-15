@@ -101,7 +101,8 @@ export const FileList: React.FC<FileListProps> = ({ files, selectedFileUrls, onS
             title="Seleccionar todos en esta página"
           />
         </div>
-        <div className="flex-1 flex items-center gap-4 min-w-0">
+        <div className="flex-1 flex items-center gap-3 min-w-0">
+            <div className="w-10 flex-shrink-0"></div>
             <div className="flex-1 min-w-0">Nombre del Archivo</div>
             <div className="w-20 text-right flex-shrink-0">Tamaño</div>
             <div className="w-24 text-center flex-shrink-0">Tipo</div>

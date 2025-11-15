@@ -2,22 +2,8 @@
 /// <reference types="chrome" />
 import React from 'react';
 import { FileItem } from '../types';
-import {
-  DownloadIcon,
-  ImageIcon,
-  VideoIcon,
-  MusicIcon,
-  DocumentIcon,
-  ArchiveIcon,
-  FontIcon,
-  StyleIcon,
-  ScriptIcon,
-  CodeIcon,
-  Model3DIcon,
-  DataIcon,
-  ExecutableIcon,
-  OtherIcon
-} from './icons';
+import { DownloadIcon } from './icons';
+import { FilePreview } from './FilePreview';
 
 interface FileItemRowProps {
   file: FileItem;
@@ -33,25 +19,6 @@ const formatBytes = (bytes: number, decimals = 2): string => {
   const i = Math.floor(Math.log(bytes) / Math.log(k));
   return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
 };
-
-const getFileTypeIcon = (type: FileItem['type']): React.ReactElement => {
-    const props = { className: "h-5 w-5" };
-    switch (type) {
-        case 'Image': return <ImageIcon {...props} />;
-        case 'Video': return <VideoIcon {...props} />;
-        case 'Audio': return <MusicIcon {...props} />;
-        case 'Document': return <DocumentIcon {...props} />;
-        case 'Archive': return <ArchiveIcon {...props} />;
-        case 'Font': return <FontIcon {...props} />;
-        case 'Style': return <StyleIcon {...props} />;
-        case 'Script': return <ScriptIcon {...props} />;
-        case 'Code': return <CodeIcon {...props} />;
-        case 'Model3D': return <Model3DIcon {...props} />;
-        case 'Data': return <DataIcon {...props} />;
-        case 'Executable': return <ExecutableIcon {...props} />;
-        default: return <OtherIcon {...props} />;
-    }
-}
 
 const getFileTypeColor = (type: FileItem['type']): string => {
   switch (type) {
@@ -117,14 +84,14 @@ export const FileItemRow: React.FC<FileItemRowProps> = ({ file, isSelected, onTo
         />
       </div>
       <div className="flex-1 flex items-center gap-3 min-w-0">
-        <div className="flex-1 flex items-center gap-2 min-w-0">
-            <div className="text-gray-400 flex-shrink-0">{getFileTypeIcon(file.type)}</div>
+        <FilePreview file={file} />
+        <div className="flex-1 flex items-center gap-3 min-w-0">
             <a
               href={file.url}
               target="_blank"
               rel="noopener noreferrer"
               onClick={(e) => e.stopPropagation()}
-              className="truncate text-sm text-gray-200 hover:underline min-w-0"
+              className="truncate text-sm text-gray-200 hover:underline min-w-0 flex-1"
               title={file.name}
             >
               {file.name}

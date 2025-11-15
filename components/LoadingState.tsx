@@ -3,10 +3,11 @@ import React, { useState, useEffect } from 'react';
 interface LoadingStateProps {
   scanType: 'standard' | 'ai';
   url: string;
+  startTime?: number; // Unix timestamp when scan started
   onCancel?: () => void;
 }
 
-export const LoadingState: React.FC<LoadingStateProps> = ({ scanType, url, onCancel }) => {
+export const LoadingState: React.FC<LoadingStateProps> = ({ scanType, url, startTime, onCancel }) => {
   const [dots, setDots] = useState('');
   const [elapsedTime, setElapsedTime] = useState(0);
 
@@ -18,13 +19,30 @@ export const LoadingState: React.FC<LoadingStateProps> = ({ scanType, url, onCan
     return () => clearInterval(interval);
   }, []);
 
-  // Track elapsed time
+  // Track elapsed time - use startTime if provided (for persistence)
   useEffect(() => {
+    const calculateElapsed = () => {
+      if (startTime) {
+        // Calculate from provided start time (persists across popup open/close)
+        return Math.floor((Date.now() - startTime) / 1000);
+      }
+      return elapsedTime;
+    };
+
+    // Initial calculation
+    setElapsedTime(calculateElapsed());
+
+    // Update every second
     const interval = setInterval(() => {
-      setElapsedTime(prev => prev + 1);
+      if (startTime) {
+        setElapsedTime(Math.floor((Date.now() - startTime) / 1000));
+      } else {
+        setElapsedTime(prev => prev + 1);
+      }
     }, 1000);
+
     return () => clearInterval(interval);
-  }, []);
+  }, [startTime]);
 
   const formatTime = (seconds: number): string => {
     if (seconds < 60) return `${seconds}s`;

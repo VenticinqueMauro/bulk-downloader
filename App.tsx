@@ -31,6 +31,7 @@ const App: React.FC = () => {
   const [selectedFileUrls, setSelectedFileUrls] = useState<Set<string>>(new Set());
   const [lastScannedUrl, setLastScannedUrl] = useState<string>('');
   const [hasScanned, setHasScanned] = useState(false); // Track if user has scanned at least once
+  const [scanStartTime, setScanStartTime] = useState<number | undefined>(undefined); // Track when scan started (for progress persistence)
 
   // Scan preferences state
   const [scanPreferences, setScanPreferences] = useState<ScanPreferences>(DEFAULT_PREFERENCES);
@@ -67,6 +68,7 @@ const App: React.FC = () => {
             setIsAiLoading(true);
           }
           setLastScannedUrl(state.url);
+          setScanStartTime(state.startedAt); // Restore start time for progress
           setHasScanned(true);
         } else if (state.files.length > 0) {
           // Scan completed, restore results
@@ -89,6 +91,7 @@ const App: React.FC = () => {
       if (message.type === 'SCAN_COMPLETE') {
         setIsStandardLoading(false);
         setIsAiLoading(false);
+        setScanStartTime(undefined); // Clear start time
         setAllFiles(message.files);
         setError(null);
         setHasScanned(true);
@@ -96,6 +99,7 @@ const App: React.FC = () => {
       } else if (message.type === 'SCAN_ERROR') {
         setIsStandardLoading(false);
         setIsAiLoading(false);
+        setScanStartTime(undefined); // Clear start time
         setError(message.error);
         setHasScanned(true);
         console.error('❌ Scan failed:', message.error);
@@ -128,6 +132,7 @@ const App: React.FC = () => {
         console.log('✅ Scan cancelled successfully');
         setIsStandardLoading(false);
         setIsAiLoading(false);
+        setScanStartTime(undefined); // Clear start time
         setError('Escaneo cancelado por el usuario');
         setHasScanned(true);
       } else {
@@ -176,8 +181,10 @@ const App: React.FC = () => {
   const executeStandardScan = async (url: string, preferences: ScanPreferences) => {
     setIsStandardLoading(true);
     setError(null);
+    setAllFiles([]); // Clear previous results
     setSelectedFileUrls(new Set());
     setLastScannedUrl(url);
+    setScanStartTime(Date.now()); // Set start time
     setHasScanned(true);
 
     console.log('🚀 Popup: Starting standard scan for:', url);
@@ -217,7 +224,9 @@ const App: React.FC = () => {
   const executeAiScan = async (url: string, preferences: ScanPreferences) => {
     setIsAiLoading(true);
     setError(null);
+    setAllFiles([]); // Clear previous results
     setLastScannedUrl(url);
+    setScanStartTime(Date.now()); // Set start time
     setHasScanned(true);
 
     console.log('🤖 Popup: Starting AI scan for:', url);
@@ -333,6 +342,7 @@ const App: React.FC = () => {
               <LoadingState
                 scanType={isAiLoading ? 'ai' : 'standard'}
                 url={lastScannedUrl}
+                startTime={scanStartTime}
                 onCancel={handleCancelScan}
               />
             )}
