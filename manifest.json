@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "FileHarvest - Descargador Masivo de Archivos",
   "short_name": "FileHarvest",
-  "description": "Descarga archivos en masa desde cualquier página web. Escaneo con IA, filtros avanzados, tamaños reales. 100% gratis, sin publicidad, sin rastreo.",
+  "description": "Descarga archivos en masa desde cualquier página. Escaneo con IA, filtros avanzados. Gratis, sin publicidad ni rastreo.",
   "version": "1.1.0",
   "author": "Mauro Venticinque",
   "homepage_url": "https://github.com/VenticinqueMauro/bulk-downloader",
